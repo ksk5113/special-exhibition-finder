@@ -22,8 +22,6 @@ public class Exhibition implements Comparable<Exhibition> {
 
 	private String room; // 전시실
 
-	private String exhibit; // 전시품
-
 	private String description;
 
 	@Override

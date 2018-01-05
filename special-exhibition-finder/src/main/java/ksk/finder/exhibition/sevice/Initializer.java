@@ -1,5 +1,6 @@
 package ksk.finder.exhibition.sevice;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,9 @@ public class Initializer {
 	@Autowired
 	private ExhibitionRepository exhibitionRepo;
 
+	@Autowired
+	private NationalMuseumScraper nmScraper;
+
 	@PostConstruct
 	public void initStart() {
 		if (museumRepo.count() != 0) {
@@ -29,6 +33,7 @@ public class Initializer {
 		}
 
 		initMuseum();
+		initExhibition();
 	}
 
 	@Transactional
@@ -47,12 +52,16 @@ public class Initializer {
 		}
 		log.info("########## initMuseum End ##########");
 	}
-	
+
 	// 우선 국중박만!
 	@Transactional
 	private void initExhibition() {
 		log.info("########## initExhibition Start ##########");
-		
+		try {
+			nmScraper.parseNationalMuseum();
+		} catch (IOException e) {
+			log.error("fail", e);
+		}
 		log.info("########## initExhibition End ##########");
 	}
 }

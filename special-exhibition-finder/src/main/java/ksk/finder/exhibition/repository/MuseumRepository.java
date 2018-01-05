@@ -6,6 +6,4 @@ import ksk.finder.exhibition.model.Museum;
 
 public interface MuseumRepository extends JpaRepository<Museum, String> {
 
-	// List<Museum> findByPublicd(boolean publicd);
-
 }
