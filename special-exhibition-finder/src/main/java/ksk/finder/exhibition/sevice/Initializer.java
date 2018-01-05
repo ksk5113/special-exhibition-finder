@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ksk.finder.exhibition.model.Museum;
@@ -14,6 +15,7 @@ import ksk.finder.exhibition.repository.ExhibitionRepository;
 import ksk.finder.exhibition.repository.MuseumRepository;
 import lombok.extern.slf4j.Slf4j;
 
+@Service
 @Slf4j
 public class Initializer {
 	@Autowired
@@ -28,7 +30,7 @@ public class Initializer {
 	@PostConstruct
 	public void initStart() {
 		if (museumRepo.count() != 0) {
-			log.info("Building are already initiatied");
+			log.info("Museums are already initiatied");
 			return;
 		}
 
