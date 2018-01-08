@@ -44,6 +44,7 @@ public class Initializer {
 
 		List<String> museumList = new ArrayList<>();
 		museumList.add("국립중앙박물관");
+		museumList.add("국립고궁박물관");
 
 		for (String name : museumList) {
 			Museum ms = new Museum();
