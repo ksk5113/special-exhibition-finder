@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE HTML>
 <!--
@@ -28,11 +29,6 @@
 			<!-- Main -->
 				<section id="main">
 
-					<!-- Header -->
-						<header id="header">
-							<div>Snapshot <span>by TEMPLATED</span></div>
-						</header>
-
 					<!-- Gallery -->
 						<section id="galleries">
 
@@ -41,52 +37,27 @@
 
 									<!-- Filters -->
 										<header>
-											<h1>Gallery</h1>
+											<h1>진행 중인 전시</h1>
 											<ul class="tabs">
-												<li><a href="#" data-tag="all" class="button active">All</a></li>
-												<li><a href="#" data-tag="people" class="button">People</a></li>
-												<li><a href="#" data-tag="place" class="button">Places</a></li>
-												<li><a href="#" data-tag="thing" class="button">Things</a></li>
+												<li><a href="#" data-tag="all" class="button active">전체</a></li>
+												<li><a href="#" data-tag="seoul" class="button">서울</a></li>
+												<li><a href="#" data-tag="gyeonggi" class="button">경기권</a></li>
+												<li><a href="#" data-tag="gangwon" class="button">강원권</a></li>
+												<li><a href="#" data-tag="chungcheong" class="button">충청권</a></li>
+												<li><a href="#" data-tag="yeongnam" class="button">영남권</a></li>
+												<li><a href="#" data-tag="honam" class="button">호남권</a></li>
+												<li><a href="#" data-tag="jeju" class="button">제주도</a></li>
 											</ul>
 										</header>
 
 										<div class="content">
-											<div class="media all people">
-												<a href="images/fulls/01.jpg"><img src="images/thumbs/01.jpg" alt="" title="This right here is a caption." /></a>
-											</div>
-											<div class="media all place">
-												<a href="images/fulls/05.jpg"><img src="images/thumbs/05.jpg" alt="" title="This right here is a caption." /></a>
-											</div>
-											<div class="media all thing">
-												<a href="images/fulls/09.jpg"><img src="images/thumbs/09.jpg" alt="" title="This right here is a caption." /></a>
-											</div>
-											<div class="media all people">
-												<a href="images/fulls/02.jpg"><img src="images/thumbs/02.jpg" alt="" title="This right here is a caption." /></a>
-											</div>
-											<div class="media all place">
-												<a href="images/fulls/06.jpg"><img src="images/thumbs/06.jpg" alt="" title="This right here is a caption." /></a>
-											</div>
-											<div class="media all thing">
-												<a href="images/fulls/10.jpg"><img src="images/thumbs/10.jpg" alt="" title="This right here is a caption." /></a>
-											</div>
-											<div class="media all people">
-												<a href="images/fulls/03.jpg"><img src="images/thumbs/03.jpg" alt="" title="This right here is a caption." /></a>
-											</div>
-											<div class="media all place">
-												<a href="images/fulls/07.jpg"><img src="images/thumbs/07.jpg" alt="" title="This right here is a caption." /></a>
-											</div>
-											<div class="media all thing">
-												<a href="images/fulls/11.jpg"><img src="images/thumbs/11.jpg" alt="" title="This right here is a caption." /></a>
-											</div>
-											<div class="media all people">
-												<a href="images/fulls/04.jpg"><img src="images/thumbs/04.jpg" alt="" title="This right here is a caption." /></a>
-											</div>
-											<div class="media all place">
-												<a href="images/fulls/08.jpg"><img src="images/thumbs/08.jpg" alt="" title="This right here is a caption." /></a>
-											</div>
-											<div class="media all thing">
-												<a href="images/fulls/12.jpg"><img src="images/thumbs/12.jpg" alt="" title="This right here is a caption." /></a>
-											</div>
+											<c:forEach items="${exhibitionList}" var="ex">
+												<div class="media all ${ex.museum.location}">
+													<a href="/generic">
+														<img src="${ex.image}" alt="" title="${ex.name}" />
+													</a>
+												</div>
+	          								</c:forEach>
 										</div>
 								</div>
 						</section>

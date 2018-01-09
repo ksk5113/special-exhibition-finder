@@ -1,4 +1,4 @@
-package ksk.finder.exhibition.sevice;
+package ksk.finder.exhibition.sevice.scraper;
 
 import java.io.IOException;
 
@@ -24,24 +24,29 @@ public class NationalMuseumScraper {
 	private ExhibitionRepository exhibitionRepo;
 
 	public void parseNationalMuseum() throws IOException {
-
-		String originalLink = "http://www.museum.go.kr/site/main/exhiSpecialTheme/list/specialGallery";
+		String originalLink = "http://www.museum.go.kr/site/main/exhiSpecialTheme/list/current";
 		Document originalDoc = Jsoup.connect(originalLink).get();
 
-		Elements aElements = originalDoc.select("div.text_inner a");
-		// 현재전시가 여러 개일 경우
-		for (Element a : aElements) {
-			if (a.child(0).child(0).text().equals("현재전시")) {
+		Element liElement = originalDoc.select("div.allPage div ul li").first();
+		int exhibitionNum = Integer.parseInt(liElement.text().substring(4, 5));
+
+		// 진행 중인 전시가 있음!
+		if (exhibitionNum > 0) {
+			Elements aElements = originalDoc.select("li.clear div.img_center a");
+
+			for (Element a : aElements) {
+				Exhibition exhibition = new Exhibition();
 				String specificLink = "http://www.museum.go.kr" + a.attr("href");
+				exhibition.setLink(specificLink);
 
 				// 여기서 specificLink(전시 상세페이지)의 정보 파싱
-				Exhibition exhibition = new Exhibition();
 				Document specificDoc = Jsoup.connect(specificLink).get();
-				
+
 				exhibition.setName((specificDoc.select("div.outveiw_text ul li").get(0).child(1).text()));
 				exhibition.setRoom((specificDoc.select("div.outveiw_text ul li").get(1).child(1).text()));
 				exhibition.setPeriod((specificDoc.select("div.outveiw_text ul li").get(2).text().substring(4)));
-				exhibition.setImage(specificDoc.select("div.outveiw_img_v2 img").attr("src"));
+				exhibition
+						.setImage("http://www.museum.go.kr" + specificDoc.select("div.outveiw_img_v2 img").attr("src"));
 				exhibition.setDescription(specificDoc.select("p.0").get(0).text());
 				exhibition.setMuseum(museumRepo.findOne("국립중앙박물관"));
 

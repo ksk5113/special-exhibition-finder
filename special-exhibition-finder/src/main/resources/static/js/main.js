@@ -48,10 +48,12 @@
 				var	$gallery = $(this),
 					$content = $gallery.find('.content');
 
+				/*
 				// Poptrox.
 					$content.poptrox({
-						usePopupCaption: true
+						usePopupCaption:
 					});
+				*/
 
 				// Tabs.
 					$gallery.each( function() {

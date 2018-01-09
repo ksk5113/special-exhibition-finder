@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE HTML>
 <!--
@@ -32,7 +33,7 @@
 						<section id="banner">
 							<div class="inner">
 								<h1>SPECIAL EXHIBITION FINDER</h1>
-								<p>진행 중인 박물관 특별 전시를 알려드립니다.</p>
+								<p>진행 중인 박물관 특별 전시를 찾아드립니다.</p>
 								<ul class="actions">
 									<li><a href="#galleries" class="button alt scrolly big">알아보기</a></li>
 								</ul>
@@ -48,34 +49,16 @@
 										<h2>진행 중인 전시</h2>
 									</header>
 									<div class="content">
-										<div class="media">
-											<a href="images/fulls/01.jpg"><img src="images/thumbs/01.jpg" alt="" title="예르미타시전" />
-												<div class="image_name">
-													<p>!국립중앙박물관!</p>
-												</div>
-											</a>
-										</div>
-										<div class="media">
-											<a href="images/fulls/05.jpg"><img src="images/thumbs/05.jpg" alt="" title="This right here is a caption." /></a>
-										</div>
-										<div class="media">
-											<a href="images/fulls/09.jpg"><img src="images/thumbs/09.jpg" alt="" title="This right here is a caption." /></a>
-										</div>
-										<div class="media">
-											<a href="images/fulls/02.jpg"><img src="images/thumbs/02.jpg" alt="" title="This right here is a caption." /></a>
-										</div>
-										<div class="media">
-											<a href="images/fulls/06.jpg"><img src="images/thumbs/06.jpg" alt="" title="This right here is a caption." /></a>
-										</div>
-										<div class="media">
-											<a href="images/fulls/10.jpg"><img src="images/thumbs/10.jpg" alt="" title="This right here is a caption." /></a>
-										</div>
-										<div class="media">
-											<a href="images/fulls/03.jpg"><img src="images/thumbs/03.jpg" alt="" title="This right here is a caption." /></a>
-										</div>
-										<div class="media">
-											<a href="images/fulls/07.jpg"><img src="images/thumbs/07.jpg" alt="" title="This right here is a caption." /></a>
-										</div>
+										<c:forEach items="${exhibitionList}" var="ex">
+											<div class="media">
+												<a href="/gallery">
+													<img src="${ex.image}" alt="" title="${ex.name}" />
+													<div class="image_name">
+														<h4>${ex.name}</h4>
+													</div>
+												</a>
+											</div>
+          								</c:forEach>
 									</div>
 									<footer>
 										<a href="/gallery" class="button big">전체 보기</a>

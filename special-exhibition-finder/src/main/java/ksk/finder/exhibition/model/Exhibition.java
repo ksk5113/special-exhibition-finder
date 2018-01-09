@@ -26,6 +26,8 @@ public class Exhibition implements Comparable<Exhibition> {
 	@Column(length = 1000000)
 	private String description;
 
+	private String link;
+
 	@Override
 	public int compareTo(Exhibition o) {
 		return 0;
