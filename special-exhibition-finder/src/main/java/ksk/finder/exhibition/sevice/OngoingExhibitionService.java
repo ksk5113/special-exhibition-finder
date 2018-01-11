@@ -20,4 +20,8 @@ public class OngoingExhibitionService {
 	public List<Exhibition> getAllExhibition() {
 		return exhibitionRepo.findAll();
 	}
+	
+	public Exhibition getAnExhibitionByName(String exhibitionName) {
+		return exhibitionRepo.findByName(exhibitionName);
+	}
 }

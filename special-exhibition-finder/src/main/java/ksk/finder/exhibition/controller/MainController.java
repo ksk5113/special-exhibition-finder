@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ksk.finder.exhibition.sevice.OngoingExhibitionService;
 
@@ -32,8 +33,17 @@ public class MainController {
 		return "gallery";
 	}
 
-	@RequestMapping(value = "/generic")
-	public String generic() {
+	@RequestMapping(value = "/generic", method = RequestMethod.GET)
+	public String genericController(Model model, @RequestParam(required = true) String exhibitionName) {
+		if (exhibitionName != null) {
+			model.addAttribute("exhibition", service.getAnExhibitionByName(exhibitionName));
+		}
+
 		return "generic";
+	}
+	
+	@RequestMapping(value = "/test")
+	public String testController() {
+		return "test";
 	}
 }

@@ -16,14 +16,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class NationalPalaceMuseumScraper {
+public class NationalPalaceMuseumScraper implements MuseumScraper {
 	@Autowired
 	private MuseumRepository museumRepo;
 
 	@Autowired
 	private ExhibitionRepository exhibitionRepo;
 
-	public void parseNationalPalaceMuseum() throws IOException {
+	@Override
+	public void parseMuseum() throws IOException {
 		// 진행 중인 전시가 여러개일 경우, 수정 필요
 		Exhibition exhibition = new Exhibition();
 		String originalLink = "http://www.gogung.go.kr/specialNowView.do";

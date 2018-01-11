@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class NationalMuseumScraper implements MuseumScraper {
+public class GongjuNationalMuseumScraper implements MuseumScraper {
 	@Autowired
 	private MuseumRepository museumRepo;
 
@@ -25,31 +25,29 @@ public class NationalMuseumScraper implements MuseumScraper {
 
 	@Override
 	public void parseMuseum() throws IOException {
-		String originalLink = "http://www.museum.go.kr/site/main/exhiSpecialTheme/list/current";
+		String originalLink = "http://gongju.museum.go.kr/_prog/special_exhibit/?site_dvs_cd=kr&menu_dvs_cd=0302&gubun=1";
 		Document originalDoc = Jsoup.connect(originalLink).get();
-
-		Element liElement = originalDoc.select("div.allPage div ul li").first();
-		int exhibitionNum = Integer.parseInt(liElement.text().substring(4, 5));
+		int exhibitionNum = Integer.parseInt(originalDoc.select("p.page_num").text().substring(4, 5));
 
 		// 진행 중인 전시가 있음!
 		if (exhibitionNum > 0) {
-			Elements aElements = originalDoc.select("li.clear div.img_center a");
+			Elements liElements = originalDoc.select("ul.edu_ul").first().children();
 
-			for (Element a : aElements) {
+			for (Element li : liElements) {
 				Exhibition exhibition = new Exhibition();
-				String specificLink = "http://www.museum.go.kr" + a.attr("href");
+				String specificLink = "http://gongju.museum.go.kr" + li.select("div.edu_img a").attr("href");
 				exhibition.setLink(specificLink);
 
 				// 여기서 specificLink(전시 상세페이지)의 정보 파싱
 				Document specificDoc = Jsoup.connect(specificLink).get();
+				Elements ulElements = specificDoc.select("ul.ul_color").first().children();
 
-				exhibition.setName((specificDoc.select("div.outveiw_text ul li").get(0).child(1).text()));
-				exhibition.setRoom((specificDoc.select("div.outveiw_text ul li").get(1).child(1).text()));
-				exhibition.setPeriod((specificDoc.select("div.outveiw_text ul li").get(2).text().substring(4)));
-				exhibition
-						.setImage("http://www.museum.go.kr" + specificDoc.select("div.outveiw_img_v2 img").attr("src"));
-				exhibition.setDescription(specificDoc.select("p.0").get(0).text());
-				exhibition.setMuseum(museumRepo.findOne("국립중앙박물관"));
+				exhibition.setName(specificDoc.select("div.edu_left3_view h4").text());
+				exhibition.setImage("http://gongju.museum.go.kr" + specificDoc.select("div.edu_img img").attr("src"));
+				exhibition.setPeriod(ulElements.get(0).text().substring(5).replaceAll(" ", ""));
+				exhibition.setDescription(ulElements.get(3).text().substring(4).trim());
+				exhibition.setRoom("기획전시실");
+				exhibition.setMuseum(museumRepo.findOne("국립공주박물관"));
 
 				exhibitionRepo.save(exhibition);
 			}

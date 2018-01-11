@@ -14,11 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ksk.finder.exhibition.model.Museum;
-import ksk.finder.exhibition.repository.ExhibitionRepository;
 import ksk.finder.exhibition.repository.MuseumRepository;
-import ksk.finder.exhibition.sevice.scraper.GwangjuNationalMuseumScraper;
-import ksk.finder.exhibition.sevice.scraper.NationalMuseumScraper;
-import ksk.finder.exhibition.sevice.scraper.NationalPalaceMuseumScraper;
+import ksk.finder.exhibition.sevice.scraper.MuseumScraper;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -28,16 +25,7 @@ public class Initializer {
 	private MuseumRepository museumRepo;
 
 	@Autowired
-	private ExhibitionRepository exhibitionRepo;
-
-	@Autowired
-	private NationalMuseumScraper nmScraper;
-
-	@Autowired
-	private NationalPalaceMuseumScraper npmScraper;
-
-	@Autowired
-	private GwangjuNationalMuseumScraper gnmScraper;
+	private List<MuseumScraper> museumScrapers;
 
 	@PostConstruct
 	public void initStart() {
@@ -56,10 +44,11 @@ public class Initializer {
 		log.info("########## initMuseum Start ##########");
 
 		Map<String, List<String>> museumMap = new HashMap<>();
-		museumMap.put("seoul", new ArrayList<String>(Arrays.asList("국립중앙박물관", "국립고궁박물관")));
+		museumMap.put("seoul", new ArrayList<String>(Arrays.asList("국립중앙박물관", "국립고궁박물관", "DDP")));
+		museumMap.put("chungcheong", new ArrayList<String>(Arrays.asList("국립공주박물관", "국립청주박물관")));
+		museumMap.put("yeongnam", new ArrayList<String>(Arrays.asList("국립김해박물관")));
 		museumMap.put("honam", new ArrayList<String>(Arrays.asList("국립광주박물관")));
-
-		System.out.println(museumMap);
+		museumMap.put("jeju", new ArrayList<String>(Arrays.asList("국립제주박물관")));
 
 		for (String key : museumMap.keySet()) {
 			List<String> museumList = museumMap.get(key);
@@ -77,15 +66,15 @@ public class Initializer {
 	@Transactional
 	private void initExhibition() {
 		log.info("########## initExhibition Start ##########");
-		
+
 		try {
-			nmScraper.parseNationalMuseum();
-			npmScraper.parseNationalPalaceMuseum();
-			gnmScraper.parseGwangjuNationalMuseum();
+			for (MuseumScraper ms : museumScrapers) {
+				ms.parseMuseum();
+			}
 		} catch (IOException e) {
 			log.error("fail", e);
 		}
-		
+
 		log.info("########## initExhibition End ##########");
 	}
 }

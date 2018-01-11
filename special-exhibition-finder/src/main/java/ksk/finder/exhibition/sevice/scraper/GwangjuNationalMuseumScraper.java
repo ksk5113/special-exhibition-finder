@@ -16,14 +16,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class GwangjuNationalMuseumScraper {
+public class GwangjuNationalMuseumScraper implements MuseumScraper {
 	@Autowired
 	private MuseumRepository museumRepo;
 
 	@Autowired
 	private ExhibitionRepository exhibitionRepo;
 
-	public void parseGwangjuNationalMuseum() throws IOException {
+	@Override
+	public void parseMuseum() throws IOException {
 		String originalLink = "http://gwangju.museum.go.kr/sub3/sub1.do";
 		Document originalDoc = Jsoup.connect(originalLink).get();
 		boolean isOngoing = originalDoc.select("tbody tr td").hasClass("num");
@@ -50,13 +51,13 @@ public class GwangjuNationalMuseumScraper {
 				// 전시명 파싱 (특별전 / 기획특집전 / 테마전 / 제00회 )
 				String exhibitionName = ulElements.select("li.tit").text();
 				if (exhibitionName.startsWith("특별전")) {
-					exhibitionName = exhibitionName.substring(3).trim().replace("<", "").replace(">", "");
+					exhibitionName = exhibitionName.replace("특별전", "").trim().replace("<", "").replace(">", "");
 				}
 				exhibition.setName(exhibitionName);
 
 				// 나머지 정보 파싱
 				exhibition.setPeriod(ulElements.select("li").get(1).text().substring(4).replaceAll(" ", ""));
-				exhibition.setDescription(ulElements.select("li").get(3).select("p").text());
+				exhibition.setDescription(ulElements.select("li").get(3).select("p").text().trim());
 				exhibition.setRoom("기획전시실");
 				exhibition.setMuseum(museumRepo.findOne("국립광주박물관"));
 

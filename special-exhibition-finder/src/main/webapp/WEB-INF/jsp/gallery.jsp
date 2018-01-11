@@ -22,7 +22,6 @@
 					<ul>
 						<li><a href="/index"><span class="icon fa-home"></span></a></li>
 						<li><a href="/gallery" class="active"><span class="icon fa-camera-retro"></span></a></li>
-						<li><a href="/generic"><span class="icon fa-file-text-o"></span></a></li>
 					</ul>
 				</nav>
 
@@ -53,7 +52,7 @@
 										<div class="content">
 											<c:forEach items="${exhibitionList}" var="ex">
 												<div class="media all ${ex.museum.location}">
-													<a href="/generic">
+													<a href="/generic?exhibitionName=${ex.name}">
 														<img src="${ex.image}" alt="" title="${ex.name}" />
 													</a>
 												</div>
