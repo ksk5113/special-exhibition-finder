@@ -7,10 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ksk.finder.exhibition.sevice.Initializer;
 import ksk.finder.exhibition.sevice.OngoingExhibitionService;
 
 @Controller
 public class MainController {
+	@Autowired
+	private Initializer initializer;
+	
 	@Autowired
 	private OngoingExhibitionService service;
 
@@ -21,6 +25,7 @@ public class MainController {
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String indexController(Model model) {
+		model.addAttribute("updated", initializer.getUpdated());
 		model.addAttribute("exhibitionList", service.getAllExhibition());
 
 		return "index";

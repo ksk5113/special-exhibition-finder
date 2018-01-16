@@ -18,6 +18,12 @@
 		vertical-align: baseline;
 	}
 
+	<!-- for image crop -->
+	html, body {
+		min-height: 100% !important;
+    	height: 100%;
+    }
+
 	article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
 		display: block;
 	}
@@ -857,17 +863,31 @@
 					-ms-transition: -ms-transform 0.2s ease-in-out;
 					transition: transform 0.2s ease-in-out;
 					max-width: 100%;
-					height: auto;
+					/* height: auto; */
 					vertical-align: middle;
 					position: relative;
+					
+					min-width: 100%;
+					min-height: 100%;
 				}
 				
 				.gallery .content .media .image_name {
 					position: absolute;
 					top: 50%;
     				left: 50%;
+    				padding: 4%;
     				transform: translate(-50%, -50%);
 					color: #FFF;
+					background-color: rgba(0, 0, 0, 0.4); 
+				}
+				
+				.gallery .content .media .image_museum {
+					position: absolute;
+					top: 0%;
+    				left: 0%;
+    				padding: 4%;
+					color: #FFF;
+					background-color: rgba(0, 0, 0, 0.4); 
 				}
 				
 				/* 
@@ -1405,6 +1425,13 @@
 
 	#header {
 		font-weight: 700;
+	}
+	
+	.index_header {
+		display: block;
+		padding: 1.15em 3.5em;
+		font-weight: 700;
+		text-align: right;
 	}
 
 /* Menu */

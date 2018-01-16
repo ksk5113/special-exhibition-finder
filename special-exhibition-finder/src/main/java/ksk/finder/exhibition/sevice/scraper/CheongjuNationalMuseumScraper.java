@@ -32,7 +32,6 @@ public class CheongjuNationalMuseumScraper implements MuseumScraper {
 		// 진행 중인 전시가 있음!
 		if (exhibitionNum > 0) {
 			Elements liElements = originalDoc.select("div#exhibit_list ul").first().children();
-			// System.out.println(liElements);
 
 			for (Element li : liElements) {
 				// 현재전시 O / 예정전시 X
@@ -46,12 +45,7 @@ public class CheongjuNationalMuseumScraper implements MuseumScraper {
 					Document specificDoc = Jsoup.connect(specificLink).get();
 					liElements = specificDoc.select("div.photo_article ul").first().children();
 
-					String exhibitionName = liElements.get(0).text().substring(3);
-					if (exhibitionName.startsWith("[특별전시]")) {
-						exhibitionName = exhibitionName.replace("[특별전시]", "").trim();
-					}
-					exhibition.setName(exhibitionName);
-
+					exhibition.setName(liElements.get(0).text().substring(3));
 					exhibition.setImage(
 							"https://cheongju.museum.go.kr" + specificDoc.select("span.photo_wrap img").attr("src"));
 					exhibition.setDescription(specificDoc.select("div.box4 p").text().trim());

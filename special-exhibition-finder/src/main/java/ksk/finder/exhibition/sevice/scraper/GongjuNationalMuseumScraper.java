@@ -42,7 +42,11 @@ public class GongjuNationalMuseumScraper implements MuseumScraper {
 				Document specificDoc = Jsoup.connect(specificLink).get();
 				Elements ulElements = specificDoc.select("ul.ul_color").first().children();
 
-				exhibition.setName(specificDoc.select("div.edu_left3_view h4").text());
+				String exhibitionName = specificDoc.select("div.edu_left3_view h4").text();
+				if (exhibitionName.startsWith("[특별전시]")) {
+					exhibitionName = exhibitionName.replace("[특별전시]", "").trim();
+				}
+				exhibition.setName(exhibitionName);
 				exhibition.setImage("http://gongju.museum.go.kr" + specificDoc.select("div.edu_img img").attr("src"));
 				exhibition.setPeriod(ulElements.get(0).text().substring(5).replaceAll(" ", ""));
 				exhibition.setDescription(ulElements.get(3).text().substring(4).trim());

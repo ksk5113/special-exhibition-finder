@@ -27,6 +27,10 @@
 
 			<!-- Main -->
 				<section id="main">
+					<!-- Header -->
+						<header id="header">
+							<div>최근 업데이트 : <span>2018.01.16 00:00:00</span></div>
+						</header>
 
 					<!-- Gallery -->
 						<section id="galleries">
@@ -54,6 +58,12 @@
 												<div class="media all ${ex.museum.location}">
 													<a href="/generic?exhibitionName=${ex.name}">
 														<img src="${ex.image}" alt="" title="${ex.name}" />
+														<div class="image_name">
+															<b>${ex.name}</b>
+														</div>
+														<div class="image_museum">
+														${ex.museum.name}
+														</div>
 													</a>
 												</div>
 	          								</c:forEach>

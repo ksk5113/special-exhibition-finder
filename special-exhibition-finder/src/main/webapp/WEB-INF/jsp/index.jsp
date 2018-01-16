@@ -26,7 +26,7 @@
 				</nav>
 
 			<!-- Main -->
-				<section id="main">
+				<section id="main">				
 
 					<!-- Banner -->
 						<section id="banner">
@@ -44,6 +44,10 @@
 
 							<!-- Photo Galleries -->
 								<div class="gallery">
+									<div class="index_header">
+										최근 업데이트 :
+										<span>${updated}</span>
+									</div>
 									<header class="special">
 										<h2>진행 중인 전시</h2>
 									</header>
@@ -53,7 +57,10 @@
 												<a href="/gallery">
 													<img src="${ex.image}" alt="" title="${ex.name}" />
 													<div class="image_name">
-														<h4>${ex.name}</h4>
+														<b>${ex.name}</b>
+													</div>
+													<div class="image_museum">
+														${ex.museum.name}
 													</div>
 												</a>
 											</div>

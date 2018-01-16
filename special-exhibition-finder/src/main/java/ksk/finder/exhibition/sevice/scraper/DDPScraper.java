@@ -1,4 +1,4 @@
-package ksk.finder.exhibition.sevice.scraper;
+/*package ksk.finder.exhibition.sevice.scraper;
 
 import java.io.IOException;
 
@@ -16,14 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class DDPScraper implements MuseumScraper {
+public class DDPScraper {
 	@Autowired
 	private MuseumRepository museumRepo;
 
 	@Autowired
 	private ExhibitionRepository exhibitionRepo;
 
-	@Override
 	public void parseMuseum() throws IOException {
 		String originalLink = "http://www.ddp.or.kr/event/list?status=&menuId=20&cateCode=01";
 		Document originalDoc = Jsoup.connect(originalLink).get();
@@ -59,4 +58,4 @@ public class DDPScraper implements MuseumScraper {
 			}
 		}
 	}
-}
+}*/
