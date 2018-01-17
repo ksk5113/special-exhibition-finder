@@ -878,7 +878,8 @@
     				padding: 4%;
     				transform: translate(-50%, -50%);
 					color: #FFF;
-					background-color: rgba(0, 0, 0, 0.4); 
+					background-color: rgba(0, 0, 0, 0.4);
+					font-size: 17px;
 				}
 				
 				.gallery .content .media .image_museum {
@@ -954,7 +955,7 @@
 		}
 
 		.image.left, .image.right {
-			max-width: 40%;
+			max-width: 60%;
 		}
 
 			.image.left img, .image.right img {
@@ -1234,6 +1235,10 @@
 		}
 
 /* Section/Article */
+
+	.exhibition_info {
+		padding-left: 60%
+	}
 
 	section.special, article.special {
 		text-align: center;

@@ -1,10 +1,12 @@
 package ksk.finder.exhibition.sevice;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +18,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ksk.finder.exhibition.model.Exhibition;
 import ksk.finder.exhibition.model.Museum;
+import ksk.finder.exhibition.repository.ExhibitionRepository;
 import ksk.finder.exhibition.repository.MuseumRepository;
 import ksk.finder.exhibition.sevice.scraper.MuseumScraper;
 import lombok.extern.slf4j.Slf4j;
@@ -25,14 +29,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Initializer {
 	public String updated = "";
-	
+
 	@Autowired
 	private MuseumRepository museumRepo;
 
 	@Autowired
+	private ExhibitionRepository exhibitionRepo;
+
+	@Autowired
 	private List<MuseumScraper> museumScrapers;
-	
-	// 부가기능 : 배너 랜덤 이미지 출력
+
+	// 추가기능 : scraper 추가하기 / 현재 크롤링 중인 박물관 목록 표기
+	// 어느정도 완성되면 서버 올리기
+	// 심심하면 : 배너 랜덤 이미지 출력
 
 	@PostConstruct
 	public void initStart() {
@@ -44,17 +53,18 @@ public class Initializer {
 
 		initMuseum();
 		initExhibition();
-		
-		this.updated = setUpdatedNow();
+		updateClosingDate();
+
+		this.updated = getCurrentTime();
 		log.info("최근 업데이트 : {}", updated);
 		log.info("########## initialization End ##########");
 	}
 
-	// 매주 화요일 07시 00분에 업데이트!
-	@Scheduled(cron = "0 0 7 * * TUE")
+	// 매주 수요일 06시 00분에 업데이트!
+	@Scheduled(cron = "0 0 6 * * WED")
 	public void updateStart() {
 		log.info("########## update Start ##########");
-		
+
 		museumRepo.deleteAll();
 
 		if (museumRepo.count() != 0) {
@@ -64,17 +74,47 @@ public class Initializer {
 
 		initMuseum();
 		initExhibition();
-		
-		this.updated = setUpdatedNow();
+
+		this.updated = getCurrentTime();
 		log.info("최근 업데이트 : {}", updated);
 		log.info("########## update End ##########");
+	}
+
+	// 이 메서드 테스트 필요 + 최초로 초기화시 올라갈 D-00도 필요!
+	// 매일 00시 00분에 업데이트!
+	@Scheduled(cron = "0 0 0 * * *")
+	public void updateClosingDate() {
+		List<Exhibition> exhibitionList = exhibitionRepo.findAll();
+
+		for (Exhibition ex : exhibitionList) {
+			ex.setClosingDate(calClosingDate(ex.getPeriod().substring(11)));
+			exhibitionRepo.save(ex);
+		}
+	}
+
+	private long calClosingDate(String period) {
+		try {
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date currentDate = new Date(cal.getTimeInMillis());
+			Date periodDate = sdf.parse(period);
+
+			long difference = currentDate.getTime() - periodDate.getTime();
+			long closingDate = difference / (24 * 60 * 60 * 1000);
+			closingDate = Math.abs(closingDate) + 1;
+
+			return closingDate;
+		} catch (ParseException e) {
+			log.error("fail", e);
+		}
+		return 0;
 	}
 
 	// 추후 수정 예정
 	@Transactional
 	private void initMuseum() {
 		Map<String, List<String>> museumMap = new HashMap<>();
-		museumMap.put("seoul", new ArrayList<String>(Arrays.asList("국립중앙박물관", "국립고궁박물관")));
+		museumMap.put("seoul", new ArrayList<String>(Arrays.asList("국립중앙박물관", "국립고궁박물관", "국립민속박물관")));
 		museumMap.put("gyeonggi", new ArrayList<String>(Arrays.asList("실학박물관")));
 		museumMap.put("gangwon", new ArrayList<String>(Arrays.asList()));
 		museumMap.put("chungcheong", new ArrayList<String>(Arrays.asList("국립공주박물관", "국립청주박물관")));
@@ -107,16 +147,16 @@ public class Initializer {
 
 		log.info("########## initExhibition End ##########");
 	}
-	
+
 	public String getUpdated() {
 		return this.updated;
 	}
-	
-	private String setUpdatedNow() {
+
+	private String getCurrentTime() {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 		String updatedTime = sdf.format(cal.getTime());
-		
+
 		return updatedTime;
 	}
 }

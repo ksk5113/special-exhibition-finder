@@ -17,6 +17,8 @@ public class Exhibition implements Comparable<Exhibition> {
 	private String image;
 
 	private String period;
+	
+	private long closingDate;
 
 	@ManyToOne
 	private Museum museum; // 박물관

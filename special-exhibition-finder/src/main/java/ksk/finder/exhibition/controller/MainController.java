@@ -33,6 +33,7 @@ public class MainController {
 
 	@RequestMapping(value = "/gallery", method = RequestMethod.GET)
 	public String galleryController(Model model) {
+		model.addAttribute("updated", initializer.getUpdated());
 		model.addAttribute("exhibitionList", service.getAllExhibition());
 
 		return "gallery";
