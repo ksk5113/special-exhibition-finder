@@ -1,4 +1,4 @@
-package ksk.finder.exhibition.sevice.scraper;
+/*package ksk.finder.exhibition.sevice.scraper;
 
 import java.io.IOException;
 
@@ -51,3 +51,4 @@ public class NationalFolkMuseumScraper implements MuseumScraper {
 		}
 	}
 }
+*/

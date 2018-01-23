@@ -1,46 +1,64 @@
 package ksk.finder.exhibition.sevice.scraper;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ksk.finder.exhibition.model.Exhibition;
+import ksk.finder.exhibition.repository.ExhibitionRepository;
+import ksk.finder.exhibition.repository.MuseumRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class SeoulHistoryMuseumScraper {
-	/*
-	 * @Autowired
-	private static MuseumRepository museumRepo;
+public class SeoulHistoryMuseumScraper implements MuseumScraper {
+	@Autowired
+	private MuseumRepository museumRepo;
 
 	@Autowired
-	private static ExhibitionRepository exhibitionRepo;
+	private ExhibitionRepository exhibitionRepo;
 
-	public static void main(String[] args) throws IOException {
-		String originalLink = "http://www.museum.seoul.kr/www/board/NR_boardList.do?bbsCd=1002&q_exhSttus=next&sso=ok";
-		Document originalDoc = Jsoup.connect(originalLink).get();
+	@Override
+	public void parseMuseum() throws IOException {
+		System.setProperty("webdriver.chrome.driver", "C:\\Users\\KIM\\Desktop\\chromedriver.exe");
+		WebDriver driver = new ChromeDriver();
+		driver.get("http://www.museum.seoul.kr/www/board/NR_boardList.do?bbsCd=1002&q_exhSttus=next&sso=ok");
+		int exhibitionNum = Integer
+				.parseInt(driver.findElements(By.cssSelector(".bbs_info span")).get(1).getText().substring(8, 9));
 
-		Elements liElements = originalDoc.select("ul.exhibit_gallery li");
+		// 진행 중인 전시가 있음!
+		if (exhibitionNum > 0) {
+			for (int i = 0; i < exhibitionNum; i++) {
+				driver.get("http://www.museum.seoul.kr/www/board/NR_boardList.do?bbsCd=1002&q_exhSttus=next&sso=ok");
+				WebElement liElement = driver.findElements(By.cssSelector(".exhibit_gallery li")).get(i);
+				String place = liElement.findElement(By.className("place")).getText();
 
-		// 현재전시가 여러 개일 경우
-		for (Element li : liElements) {
-			if (li.child(0).child(3).text().contains("서울역사박물관")) {
-				String specificLink = li.child(0).attr("href");
-				System.out.println(specificLink);
-				
-				
-				// 여기서 specificLink(전시 상세페이지)의 정보 파싱
-				Exhibition exhibition = new Exhibition();
-				Document specificDoc = Jsoup.connect(specificLink).get();
+				if (place.contains("서울역사박물관")) {
+					// specificLink 파싱 불가능
+					Exhibition exhibition = new Exhibition();
+					WebElement aElement = liElement.findElement(By.tagName("a"));
+					aElement.click();
+					driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
-				exhibition.setName((specificDoc.select("div.outveiw_text ul li").get(0).child(1).text()));
-				exhibition.setRoom((specificDoc.select("div.outveiw_text ul li").get(1).child(1).text()));
-				exhibition.setPeriod((specificDoc.select("div.outveiw_text ul li").get(2).text().substring(4)));
-				exhibition.setImage(specificDoc.select("div.outveiw_img_v2 img").attr("src"));
-				exhibition.setDescription(specificDoc.select("p.0").get(0).text());
-				exhibition.setMuseum(museumRepo.findOne("국립중앙박물관"));
+					// 여기서 전시 상세페이지의 정보 파싱
+					exhibition.setImage(driver.findElement(By.cssSelector(".poster_area img")).getAttribute("src"));
+					exhibition.setName(driver.findElement(By.cssSelector(".exhibit_info .tit")).getText().trim());
 
-				exhibitionRepo.save(exhibition);
+					List<WebElement> ddElements = driver.findElements(By.cssSelector(".exhibit_info dl dd"));
+					exhibition.setPeriod(ddElements.get(0).getText().replaceAll(" ", ""));
+					exhibition.setRoom(ddElements.get(1).getText().trim());
+					exhibition.setMuseum(museumRepo.findOne("서울역사박물관"));
+
+					exhibitionRepo.save(exhibition);
+				}
 			}
 		}
 	}
-	*/
 }
