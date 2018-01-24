@@ -7,12 +7,9 @@ import org.springframework.stereotype.Service;
 
 import ksk.finder.exhibition.model.Exhibition;
 import ksk.finder.exhibition.repository.ExhibitionRepository;
-import ksk.finder.exhibition.repository.MuseumRepository;
 
 @Service
 public class OngoingExhibitionService {
-	@Autowired
-	private MuseumRepository museumRepo;
 
 	@Autowired
 	private ExhibitionRepository exhibitionRepo;
@@ -20,7 +17,7 @@ public class OngoingExhibitionService {
 	public List<Exhibition> getAllExhibition() {
 		return exhibitionRepo.findAll();
 	}
-	
+
 	public Exhibition getAnExhibitionByName(String exhibitionName) {
 		return exhibitionRepo.findByName(exhibitionName);
 	}

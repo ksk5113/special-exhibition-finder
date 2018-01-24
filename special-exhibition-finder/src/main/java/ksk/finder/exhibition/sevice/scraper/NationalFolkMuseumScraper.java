@@ -1,4 +1,4 @@
-/*package ksk.finder.exhibition.sevice.scraper;
+package ksk.finder.exhibition.sevice.scraper;
 
 import java.io.IOException;
 
@@ -25,30 +25,34 @@ public class NationalFolkMuseumScraper implements MuseumScraper {
 
 	@Override
 	public void parseMuseum() throws IOException {
-		String originalLink = "http://www.nfm.go.kr/Display/disIng_list.nfm";
+		String originalLink = "http://www.nfm.go.kr/user/planexhibition/home/63/selectPlanExhibitionNList.do";
 		Document originalDoc = Jsoup.connect(originalLink).get();
 
-		Elements liElements = originalDoc.select("ul.dising_list").first().children();
+		Elements liElements = originalDoc.select("ul.d-exhibition__list").first().children();
 
 		// 진행 중인 전시가 없을 경우, 수정 필요!
 		for (Element li : liElements) {
-			Exhibition exhibition = new Exhibition();
-			String specificLink = "http://www.nfm.go.kr" + li.select("div.plan span a").attr("href");
-			exhibition.setLink(specificLink);
+			if (li.select("div.c-labels span").first().text().equals("현재전시")) {
+				Exhibition exhibition = new Exhibition();
+				String specificLink = "http://www.nfm.go.kr" + li.select("a.d-exhibition__link").attr("href");
+				exhibition.setLink(specificLink);
 
-			// 여기서 specificLink(전시 상세페이지)의 정보 파싱
-			Document specificDoc = Jsoup.connect(specificLink).get();
+				// 여기서 specificLink(전시 상세페이지)의 정보 파싱
+				Document specificDoc = Jsoup.connect(specificLink).get();
 
-			exhibition.setName(specificDoc.select("div.bookbox h3.title").text());
-			exhibition
-					.setPeriod(specificDoc.select("div.bookbox ul li").get(0).text().substring(4).replaceAll(" ", ""));
-			exhibition.setRoom(specificDoc.select("div.bookbox ul li").get(1).text().substring(7));
-			exhibition.setImage("http://www.nfm.go.kr" + specificDoc.select("div#container p.book img").attr("src"));
-			exhibition.setDescription(specificDoc.select("div.boardReadbody blockquote p").text());
-			exhibition.setMuseum(museumRepo.findOne("국립민속박물관"));
+				exhibition.setImage(
+						"http://www.nfm.go.kr" + specificDoc.select("div.d-exhibition__poster img").attr("src"));
+				exhibition.setName(specificDoc.select("div.d-exhibition__title").text().trim());
 
-			exhibitionRepo.save(exhibition);
+				Elements divElements = specificDoc.select("div.d-exhibition__datas").first().children();
+				exhibition.setRoom(divElements.get(0).select("div.d-exhibition__value").text().trim());
+				exhibition.setPeriod(divElements.get(1).select("div.d-exhibition__value").text().trim());
+
+				exhibition.setDescription(specificDoc.select("div.d-exhibition__article blockquote p").text());
+				exhibition.setMuseum(museumRepo.findOne("국립민속박물관"));
+
+				exhibitionRepo.save(exhibition);
+			}
 		}
 	}
 }
-*/

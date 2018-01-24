@@ -40,7 +40,6 @@ public class Initializer {
 	private List<MuseumScraper> museumScrapers;
 
 	// 추가기능 : scraper 추가하기 / 현재 크롤링 중인 박물관 목록 표기
-	// 동적 페이지 크롤링은 셀레늄!
 	// 어느정도 완성되면 서버 올리기
 	// 심심하면 : 배너 랜덤 이미지 출력
 
@@ -54,7 +53,8 @@ public class Initializer {
 
 		initMuseum();
 		initExhibition();
-		updateClosingDate();
+		updateExhibitionClosingDate();
+		updateExhibitionRoom();
 
 		this.updated = getCurrentTime();
 		log.info("최근 업데이트 : {}", updated);
@@ -75,6 +75,7 @@ public class Initializer {
 
 		initMuseum();
 		initExhibition();
+		updateExhibitionRoom();
 
 		this.updated = getCurrentTime();
 		log.info("최근 업데이트 : {}", updated);
@@ -83,16 +84,16 @@ public class Initializer {
 
 	// 매일 00시 00분에 업데이트!
 	@Scheduled(cron = "0 0 0 * * *")
-	public void updateClosingDate() {
+	public void updateExhibitionClosingDate() {
 		List<Exhibition> exhibitionList = exhibitionRepo.findAll();
 
 		for (Exhibition ex : exhibitionList) {
-			ex.setClosingDate(calClosingDate(ex.getPeriod().substring(11)));
+			ex.setClosingDate(calExhibitionClosingDate(ex.getPeriod().substring(11)));
 			exhibitionRepo.save(ex);
 		}
 	}
 
-	private long calClosingDate(String period) {
+	private long calExhibitionClosingDate(String period) {
 		try {
 			Calendar cal = Calendar.getInstance();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -110,11 +111,29 @@ public class Initializer {
 		return 0;
 	}
 
+	// 전시실이 박물관 이름으로 시작하는 경우 변경하는 메서드
+	public void updateExhibitionRoom() {
+		List<Exhibition> exhibitionList = exhibitionRepo.findAll();
+
+		for (Exhibition ex : exhibitionList) {
+			ex.setRoom(calExhibitionRoom(ex.getMuseum().getName(), ex.getRoom()));
+			exhibitionRepo.save(ex);
+		}
+	}
+
+	private String calExhibitionRoom(String museumName, String room) {
+		if (room.startsWith(museumName)) {
+			return room.replaceAll(museumName, "").replaceAll(" ", "");
+		} else {
+			return room;
+		}
+	}
+
 	// 추후 수정 예정
 	@Transactional
 	private void initMuseum() {
 		Map<String, List<String>> museumMap = new HashMap<>();
-		museumMap.put("seoul", new ArrayList<String>(Arrays.asList("국립중앙박물관", "국립고궁박물관", "서울역사박물관")));
+		museumMap.put("seoul", new ArrayList<String>(Arrays.asList("국립중앙박물관", "국립고궁박물관", "서울역사박물관", "국립민속박물관")));
 		museumMap.put("gyeonggi", new ArrayList<String>(Arrays.asList("실학박물관")));
 		museumMap.put("gangwon", new ArrayList<String>(Arrays.asList()));
 		museumMap.put("chungcheong", new ArrayList<String>(Arrays.asList("국립공주박물관", "국립청주박물관")));

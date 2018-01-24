@@ -51,9 +51,14 @@ public class SeoulHistoryMuseumScraper implements MuseumScraper {
 					exhibition.setImage(driver.findElement(By.cssSelector(".poster_area img")).getAttribute("src"));
 					exhibition.setName(driver.findElement(By.cssSelector(".exhibit_info .tit")).getText().trim());
 
+					List<WebElement> pElements = driver.findElements(By.cssSelector(".bbs_article .output_area p"));
+					exhibition.setDescription(pElements.get(0).getText() + pElements.get(1).getText()
+							+ pElements.get(2).getText() + pElements.get(3).getText());
+
 					List<WebElement> ddElements = driver.findElements(By.cssSelector(".exhibit_info dl dd"));
 					exhibition.setPeriod(ddElements.get(0).getText().replaceAll(" ", ""));
 					exhibition.setRoom(ddElements.get(1).getText().trim());
+
 					exhibition.setMuseum(museumRepo.findOne("서울역사박물관"));
 
 					exhibitionRepo.save(exhibition);
