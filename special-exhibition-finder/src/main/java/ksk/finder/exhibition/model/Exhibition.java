@@ -17,7 +17,7 @@ public class Exhibition implements Comparable<Exhibition> {
 	private String image;
 
 	private String period;
-	
+
 	private long closingDate;
 
 	@ManyToOne
@@ -28,7 +28,9 @@ public class Exhibition implements Comparable<Exhibition> {
 	@Column(length = 1000000)
 	private String description;
 
-	private String link;
+	private String originalLink;
+
+	private String specificLink;
 
 	@Override
 	public int compareTo(Exhibition o) {

@@ -35,8 +35,10 @@ public class GongjuNationalMuseumScraper implements MuseumScraper {
 
 			for (Element li : liElements) {
 				Exhibition exhibition = new Exhibition();
+				exhibition.setOriginalLink(originalLink);
+				
 				String specificLink = "http://gongju.museum.go.kr" + li.select("div.edu_img a").attr("href");
-				exhibition.setLink(specificLink);
+				exhibition.setSpecificLink(specificLink);
 
 				// 여기서 specificLink(전시 상세페이지)의 정보 파싱
 				Document specificDoc = Jsoup.connect(specificLink).get();

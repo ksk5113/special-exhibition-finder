@@ -35,8 +35,10 @@ public class GwangjuNationalMuseumScraper implements MuseumScraper {
 
 			for (Element tr : trElements) {
 				Exhibition exhibition = new Exhibition();
+				exhibition.setOriginalLink(originalLink);
+
 				String specificLink = "http://gwangju.museum.go.kr" + tr.child(1).select("a").attr("href");
-				exhibition.setLink(specificLink);
+				exhibition.setSpecificLink(specificLink);
 
 				// 여기서 specificLink(전시 상세페이지)의 정보 파싱
 				Document specificDoc = Jsoup.connect(specificLink).get();

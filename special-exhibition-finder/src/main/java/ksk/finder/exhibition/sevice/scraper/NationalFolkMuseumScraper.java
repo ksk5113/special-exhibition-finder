@@ -34,8 +34,10 @@ public class NationalFolkMuseumScraper implements MuseumScraper {
 		for (Element li : liElements) {
 			if (li.select("div.c-labels span").first().text().equals("현재전시")) {
 				Exhibition exhibition = new Exhibition();
+				exhibition.setOriginalLink(originalLink);
+
 				String specificLink = "http://www.nfm.go.kr" + li.select("a.d-exhibition__link").attr("href");
-				exhibition.setLink(specificLink);
+				exhibition.setSpecificLink(specificLink);
 
 				// 여기서 specificLink(전시 상세페이지)의 정보 파싱
 				Document specificDoc = Jsoup.connect(specificLink).get();

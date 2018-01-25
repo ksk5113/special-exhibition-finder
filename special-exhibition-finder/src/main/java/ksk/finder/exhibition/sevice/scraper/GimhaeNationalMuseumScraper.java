@@ -34,7 +34,9 @@ public class GimhaeNationalMuseumScraper implements MuseumScraper {
 
 		// (아마) 동시에 진행 중인 전시가 없을 듯 -> for문 필요없음!
 		Exhibition exhibition = new Exhibition();
-		exhibition.setLink(originalLink);
+		exhibition.setOriginalLink(originalLink);
+
+		exhibition.setSpecificLink(originalLink);
 		exhibition.setImage(
 				"http://gimhae.museum.go.kr" + divElements.select("div.s25imgwrap div.s25img img").attr("src"));
 		exhibition.setName(trElements.get(0).select("td").text().trim());

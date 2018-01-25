@@ -37,8 +37,10 @@ public class NationalMuseumScraper implements MuseumScraper {
 
 			for (Element a : aElements) {
 				Exhibition exhibition = new Exhibition();
+				exhibition.setOriginalLink(originalLink);
+
 				String specificLink = "http://www.museum.go.kr" + a.attr("href");
-				exhibition.setLink(specificLink);
+				exhibition.setSpecificLink(specificLink);
 
 				// 여기서 specificLink(전시 상세페이지)의 정보 파싱
 				Document specificDoc = Jsoup.connect(specificLink).get();
@@ -49,6 +51,7 @@ public class NationalMuseumScraper implements MuseumScraper {
 				exhibition
 						.setImage("http://www.museum.go.kr" + specificDoc.select("div.outveiw_img_v2 img").attr("src"));
 				exhibition.setDescription(specificDoc.select("p.0").get(0).text());
+				exhibition.setDescription(specificDoc.select("div.view_info div.lh18").first().child(1).text());
 				exhibition.setMuseum(museumRepo.findOne("국립중앙박물관"));
 
 				exhibitionRepo.save(exhibition);

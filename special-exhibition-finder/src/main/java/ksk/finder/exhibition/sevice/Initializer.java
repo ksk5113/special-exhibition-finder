@@ -135,16 +135,16 @@ public class Initializer {
 		List<Exhibition> exhibitionList = exhibitionRepo.findAll();
 
 		for (Exhibition ex : exhibitionList) {
-			ex.setLink(calExhibitionLink(ex.getLink()));
+			ex.setSpecificLink(calExhibitionLink(ex.getOriginalLink(), ex.getSpecificLink()));
 			exhibitionRepo.save(ex);
 		}
 	}
 
-	private String calExhibitionLink(String link) {
-		if (link == null) {
-			return "홈페이지 링크를 제공하지 않는 전시입니다.";
+	private String calExhibitionLink(String originalLink, String specificLink) {
+		if (specificLink == null) {
+			return originalLink;
 		}
-		return link;
+		return specificLink;
 	}
 
 	// 추후 수정 예정
@@ -154,7 +154,7 @@ public class Initializer {
 		museumMap.put("seoul", new ArrayList<String>(Arrays.asList("국립중앙박물관", "국립고궁박물관", "서울역사박물관", "국립민속박물관")));
 		museumMap.put("gyeonggi", new ArrayList<String>(Arrays.asList("실학박물관")));
 		museumMap.put("gangwon", new ArrayList<String>(Arrays.asList()));
-		museumMap.put("chungcheong", new ArrayList<String>(Arrays.asList("국립공주박물관", "국립청주박물관")));
+		museumMap.put("chungcheong", new ArrayList<String>(Arrays.asList("국립공주박물관", "국립청주박물관", "국립부여박물관")));
 		museumMap.put("yeongnam", new ArrayList<String>(Arrays.asList("국립김해박물관", "국립대구박물관")));
 		museumMap.put("honam", new ArrayList<String>(Arrays.asList("국립광주박물관")));
 		museumMap.put("jeju", new ArrayList<String>(Arrays.asList("국립제주박물관")));

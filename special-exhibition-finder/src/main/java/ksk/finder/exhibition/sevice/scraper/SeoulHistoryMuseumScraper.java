@@ -43,6 +43,9 @@ public class SeoulHistoryMuseumScraper implements MuseumScraper {
 				if (place.contains("서울역사박물관")) {
 					// specificLink 파싱 불가능
 					Exhibition exhibition = new Exhibition();
+					exhibition.setOriginalLink(
+							"http://www.museum.seoul.kr/www/board/NR_boardList.do?bbsCd=1002&q_exhSttus=next&sso=ok");
+
 					WebElement aElement = liElement.findElement(By.tagName("a"));
 					aElement.click();
 					driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);

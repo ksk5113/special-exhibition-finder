@@ -36,8 +36,10 @@ public class SilhakMuseumScraper implements MuseumScraper {
 
 			if (isHistorical) {
 				Exhibition exhibition = new Exhibition();
+				exhibition.setOriginalLink(originalLink);
+
 				String specificLink = li.select("div.thumbnail a").attr("href");
-				exhibition.setLink(specificLink);
+				exhibition.setSpecificLink(specificLink);
 
 				// 여기서 specificLink(전시 상세페이지)의 정보 파싱
 				Document specificDoc = Jsoup.connect(specificLink).get();

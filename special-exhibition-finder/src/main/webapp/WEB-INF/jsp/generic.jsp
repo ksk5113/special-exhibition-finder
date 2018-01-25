@@ -45,11 +45,11 @@
 												<h4>장소</h4> ${exhibition.museum.name} ${exhibition.room}
 												<br/><br/>
 												<h4>홈페이지</h4>
-													<c:if test="${exhibition.link eq '홈페이지 링크를 제공하지 않는 전시입니다.'}">
-														<p>홈페이지 링크를 제공하지 않는 전시입니다.</p>
+													<c:if test="${exhibition.specificLink eq null}">
+														<a href="${exhibition.originalLink}" target="_blank">${exhibition.originalLink}</a>
 											        </c:if>
-											        <c:if test="${exhibition.link ne '홈페이지 링크를 제공하지 않는 전시입니다.'}">
-														<a href="${exhibition.link}" target="_blank">${exhibition.link}</a>
+											        <c:if test="${exhibition.specificLink ne null}">
+														<a href="${exhibition.specificLink}" target="_blank">${exhibition.specificLink}</a>
 											        </c:if>
 											</p>
 										</div>

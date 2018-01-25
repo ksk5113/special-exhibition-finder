@@ -1,4 +1,4 @@
-package ksk.finder.exhibition.sevice.scraper;
+/*package ksk.finder.exhibition.sevice.scraper;
 
 import java.io.IOException;
 
@@ -17,11 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class NationalHangeulMuseumScraper {
-	/*
+	
 	 * @Autowired private static MuseumRepository museumRepo;
 	 * 
 	 * @Autowired private static ExhibitionRepository exhibitionRepo;
-	 */
+	 
 
 	public static void main(String[] args) throws IOException {
 		String originalLink = "http://www.hangeul.go.kr/specialExh/specialExhList.do?target=1&curr_menu_cd=0103020100";
@@ -40,3 +40,4 @@ public class NationalHangeulMuseumScraper {
 		}
 	}
 }
+*/

@@ -35,8 +35,10 @@ public class JejuNationalMuseumScraper implements MuseumScraper {
 
 			for (Element ar : arElements) {
 				Exhibition exhibition = new Exhibition();
+				exhibition.setOriginalLink(originalLink);
+
 				String specificLink = "http://jeju.museum.go.kr" + ar.select("div.exhib_img figure a").attr("href");
-				exhibition.setLink(specificLink);
+				exhibition.setSpecificLink(specificLink);
 
 				// 여기서 specificLink(전시 상세페이지)의 정보 파싱
 				Document specificDoc = Jsoup.connect(specificLink).get();

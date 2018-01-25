@@ -35,7 +35,7 @@ public class NationalPalaceMuseumScraper implements MuseumScraper {
 		Elements siblings = divElements.siblingElements();
 
 		// 여기서 specificLink(전시 상세페이지)의 정보 파싱
-		exhibition.setLink(originalLink);
+		exhibition.setSpecificLink(originalLink);
 		exhibition.setName(divElements.text());
 		exhibition.setPeriod(siblings.get(1).text().substring(7).replaceAll(" ", ""));
 		exhibition.setRoom(siblings.get(2).text().substring(7));

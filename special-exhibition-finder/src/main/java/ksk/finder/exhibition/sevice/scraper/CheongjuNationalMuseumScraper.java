@@ -37,9 +37,11 @@ public class CheongjuNationalMuseumScraper implements MuseumScraper {
 				// 현재전시 O / 예정전시 X
 				if (li.select("li.exhibit_tit img").attr("alt").equals("현재전시")) {
 					Exhibition exhibition = new Exhibition();
+					exhibition.setOriginalLink(originalLink);
+
 					String specificLink = "https://cheongju.museum.go.kr"
 							+ li.select("a").attr("href").replaceFirst(".", "/www");
-					exhibition.setLink(specificLink);
+					exhibition.setSpecificLink(specificLink);
 
 					// 여기서 specificLink(전시 상세페이지)의 정보 파싱
 					Document specificDoc = Jsoup.connect(specificLink).get();

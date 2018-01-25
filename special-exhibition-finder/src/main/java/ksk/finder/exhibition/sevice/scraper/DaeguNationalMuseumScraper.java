@@ -37,10 +37,13 @@ public class DaeguNationalMuseumScraper implements MuseumScraper {
 			int exhibitionNum = driver.findElements(By.cssSelector("ul.exhibit_poster li")).size();
 
 			for (int i = 0; i < exhibitionNum; i++) {
+				// specificLink 파싱 불가능
 				driver.get("http://daegu.museum.go.kr/display/dispnowList.do?menu_nix=hlu4IXv0");
 				WebElement liElement = driver.findElements(By.cssSelector("ul.exhibit_poster li")).get(i);
 
 				Exhibition exhibition = new Exhibition();
+				exhibition.setOriginalLink("http://daegu.museum.go.kr/display/dispnowList.do?menu_nix=hlu4IXv0");
+
 				WebElement aElement = liElement.findElement(By.tagName("a"));
 				aElement.click();
 				driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
