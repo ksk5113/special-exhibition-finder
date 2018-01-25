@@ -65,5 +65,6 @@ public class SeoulHistoryMuseumScraper implements MuseumScraper {
 				}
 			}
 		}
+		driver.quit();
 	}
 }

@@ -14,12 +14,12 @@ import ksk.finder.exhibition.sevice.OngoingExhibitionService;
 public class MainController {
 	@Autowired
 	private Initializer initializer;
-	
+
 	@Autowired
 	private OngoingExhibitionService service;
 
-	@RequestMapping(value = "/")
-	public String root() {
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String indexDispatcher() {
 		return "index";
 	}
 
@@ -46,10 +46,5 @@ public class MainController {
 		}
 
 		return "generic";
-	}
-	
-	@RequestMapping(value = "/test")
-	public String testController() {
-		return "test";
 	}
 }
