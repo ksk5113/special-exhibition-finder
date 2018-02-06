@@ -1,4 +1,4 @@
-/*package ksk.finder.exhibition.sevice.scraper;
+package ksk.finder.exhibition.sevice.scraper;
 
 import java.io.IOException;
 
@@ -16,13 +16,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class DDPScraper {
+public class DDPScraper implements MuseumScraper {
 	@Autowired
 	private MuseumRepository museumRepo;
 
 	@Autowired
 	private ExhibitionRepository exhibitionRepo;
 
+	@Override
 	public void parseMuseum() throws IOException {
 		String originalLink = "http://www.ddp.or.kr/event/list?status=&menuId=20&cateCode=01";
 		Document originalDoc = Jsoup.connect(originalLink).get();
@@ -35,13 +36,14 @@ public class DDPScraper {
 
 			if (isHistorical) {
 				Exhibition exhibition = new Exhibition();
+				exhibition.setOriginalLink(originalLink);
 
 				// 이미지 먼저 파싱
 				// 이미지 파싱이 안됨 ㅠㅠ
 				exhibition.setImage(li.select("a div.thumbimg img.lazy").attr("data-original").substring(2));
 
 				String specificLink = "http://www.ddp.or.kr/" + li.select("a").attr("href");
-				exhibition.setLink(specificLink);
+				exhibition.setSpecificLink(specificLink);
 
 				// 여기서 specificLink(전시 상세페이지)의 정보 파싱
 				Document specificDoc = Jsoup.connect(specificLink).get();
@@ -58,4 +60,4 @@ public class DDPScraper {
 			}
 		}
 	}
-}*/
+}
