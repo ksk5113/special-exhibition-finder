@@ -151,7 +151,8 @@ public class Initializer {
 	@Transactional
 	private void initMuseum() {
 		Map<String, List<String>> museumMap = new HashMap<>();
-		museumMap.put("seoul", new ArrayList<String>(Arrays.asList("국립중앙박물관", "국립고궁박물관", "서울역사박물관", "국립민속박물관")));
+		museumMap.put("seoul",
+				new ArrayList<String>(Arrays.asList("국립중앙박물관", "국립고궁박물관", "서울역사박물관", "국립민속박물관", "불교중앙박물관")));
 		museumMap.put("gyeonggi", new ArrayList<String>(Arrays.asList("실학박물관")));
 		museumMap.put("gangwon", new ArrayList<String>(Arrays.asList()));
 		museumMap.put("chungcheong", new ArrayList<String>(Arrays.asList("국립공주박물관", "국립청주박물관", "국립부여박물관")));

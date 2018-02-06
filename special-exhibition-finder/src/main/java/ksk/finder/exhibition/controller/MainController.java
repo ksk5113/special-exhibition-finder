@@ -26,7 +26,7 @@ public class MainController {
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String indexController(Model model) {
 		model.addAttribute("updated", initializer.getUpdated());
-		model.addAttribute("exhibitionList", service.getAllExhibition());
+		model.addAttribute("exhibitionList", service.get8Exhibitions());
 
 		return "index";
 	}
@@ -34,7 +34,7 @@ public class MainController {
 	@RequestMapping(value = "/gallery", method = RequestMethod.GET)
 	public String galleryController(Model model) {
 		model.addAttribute("updated", initializer.getUpdated());
-		model.addAttribute("exhibitionList", service.getAllExhibition());
+		model.addAttribute("exhibitionList", service.getAllExhibitions());
 
 		return "gallery";
 	}

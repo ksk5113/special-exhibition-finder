@@ -28,6 +28,8 @@ public class NationalPalaceMuseumScraper implements MuseumScraper {
 		// 진행 중인 전시가 여러개일 경우, 수정 필요
 		Exhibition exhibition = new Exhibition();
 		String originalLink = "http://www.gogung.go.kr/specialNowView.do";
+		exhibition.setOriginalLink(originalLink);
+
 		Document originalDoc = Jsoup.connect(originalLink).get();
 		Element divElements = originalDoc.select("p.sec_tit").first();
 

@@ -50,8 +50,8 @@ public class NationalMuseumScraper implements MuseumScraper {
 				exhibition.setPeriod((specificDoc.select("div.outveiw_text ul li").get(2).text().substring(4)));
 				exhibition
 						.setImage("http://www.museum.go.kr" + specificDoc.select("div.outveiw_img_v2 img").attr("src"));
-				exhibition.setDescription(specificDoc.select("p.0").get(0).text());
-				exhibition.setDescription(specificDoc.select("div.view_info div.lh18").first().child(1).text());
+				exhibition.setDescription(
+						specificDoc.select("p.0").get(0).text() + specificDoc.select("p.0").get(1).text());
 				exhibition.setMuseum(museumRepo.findOne("국립중앙박물관"));
 
 				exhibitionRepo.save(exhibition);
