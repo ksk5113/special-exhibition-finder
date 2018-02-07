@@ -1,6 +1,7 @@
 package ksk.finder.exhibition.sevice.scraper;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,13 +25,13 @@ public class CentralBuddhistMuseumScraper implements MuseumScraper {
 	private ExhibitionRepository exhibitionRepo;
 
 	@Override
-	public void parseMuseum() throws IOException {
+	public List<Exhibition> parseMuseum() throws IOException {
 		String originalLink = "http://museum.buddhism.or.kr/?c=2/12";
 		Document originalDoc = Jsoup.connect(originalLink).get();
 
 		Element divElement = originalDoc.select("div#bbslist").first().children().get(1);
 		boolean isOngoing = divElement.hasClass("gallery");
-		
+
 		// 진행 중인 전시가 있음!
 		if (isOngoing) {
 			Elements divElements = originalDoc.select("div#bbslist div.picbox");
@@ -84,9 +85,10 @@ public class CentralBuddhistMuseumScraper implements MuseumScraper {
 					exhibition.setDescription(exhibitionDescription);
 					exhibition.setMuseum(museumRepo.findOne("불교중앙박물관"));
 
-					exhibitionRepo.save(exhibition);
+					exhibitionList.add(exhibition);
 				}
 			}
 		}
+		return exhibitionList;
 	}
 }

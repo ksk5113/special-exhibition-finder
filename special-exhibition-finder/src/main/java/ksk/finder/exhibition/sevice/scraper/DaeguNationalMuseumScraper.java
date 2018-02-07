@@ -1,6 +1,7 @@
 package ksk.finder.exhibition.sevice.scraper;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -25,7 +26,7 @@ public class DaeguNationalMuseumScraper implements MuseumScraper {
 	private ExhibitionRepository exhibitionRepo;
 
 	@Override
-	public void parseMuseum() throws IOException {
+	public List<Exhibition> parseMuseum() throws IOException {
 		System.setProperty("webdriver.chrome.driver", "C:\\Users\\KIM\\Desktop\\chromedriver.exe");
 		WebDriver driver = new ChromeDriver();
 		driver.get("http://daegu.museum.go.kr/display/dispnowList.do?menu_nix=hlu4IXv0");
@@ -58,9 +59,10 @@ public class DaeguNationalMuseumScraper implements MuseumScraper {
 				exhibition.setDescription(driver.findElement(By.cssSelector("div.dateil_info")).getText().trim());
 				exhibition.setMuseum(museumRepo.findOne("국립대구박물관"));
 
-				exhibitionRepo.save(exhibition);
+				exhibitionList.add(exhibition);
 			}
 		}
 		driver.quit();
+		return exhibitionList;
 	}
 }

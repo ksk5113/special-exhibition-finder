@@ -1,6 +1,7 @@
 package ksk.finder.exhibition.sevice.scraper;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,7 +25,7 @@ public class GimhaeNationalMuseumScraper implements MuseumScraper {
 	private ExhibitionRepository exhibitionRepo;
 
 	@Override
-	public void parseMuseum() throws IOException {
+	public List<Exhibition> parseMuseum() throws IOException {
 		String originalLink = "http://gimhae.museum.go.kr/html/kr/exh/exh_02_01.html";
 		Document originalDoc = Jsoup.connect(originalLink).get();
 
@@ -45,6 +46,7 @@ public class GimhaeNationalMuseumScraper implements MuseumScraper {
 		exhibition.setDescription(divElements.select("div.exh_cont_middle div.econtent").text().trim());
 		exhibition.setMuseum(museumRepo.findOne("국립김해박물관"));
 
-		exhibitionRepo.save(exhibition);
+		exhibitionList.add(exhibition);
+		return exhibitionList;
 	}
 }

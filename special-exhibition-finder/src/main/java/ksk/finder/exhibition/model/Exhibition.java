@@ -1,5 +1,8 @@
 package ksk.finder.exhibition.model;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,7 +21,9 @@ public class Exhibition implements Comparable<Exhibition> {
 
 	private String period;
 
-	private long closingDate;
+	private LocalDate startDate;
+
+	private LocalDate endDate;
 
 	@ManyToOne
 	private Museum museum; // 박물관
@@ -35,5 +40,11 @@ public class Exhibition implements Comparable<Exhibition> {
 	@Override
 	public int compareTo(Exhibition o) {
 		return 0;
+	}
+
+	public long getCalculatedRemainingDays() {
+		LocalDate today = LocalDate.now();
+
+		return ChronoUnit.DAYS.between(today, this.endDate);
 	}
 }

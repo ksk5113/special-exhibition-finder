@@ -26,7 +26,7 @@ public class SeoulHistoryMuseumScraper implements MuseumScraper {
 	private ExhibitionRepository exhibitionRepo;
 
 	@Override
-	public void parseMuseum() throws IOException {
+	public List<Exhibition> parseMuseum() throws IOException {
 		System.setProperty("webdriver.chrome.driver", "C:\\Users\\KIM\\Desktop\\chromedriver.exe");
 		WebDriver driver = new ChromeDriver();
 		driver.get("http://www.museum.seoul.kr/www/board/NR_boardList.do?bbsCd=1002&q_exhSttus=next&sso=ok");
@@ -61,13 +61,13 @@ public class SeoulHistoryMuseumScraper implements MuseumScraper {
 					List<WebElement> ddElements = driver.findElements(By.cssSelector(".exhibit_info dl dd"));
 					exhibition.setPeriod(ddElements.get(0).getText().replaceAll(" ", ""));
 					exhibition.setRoom(ddElements.get(1).getText().trim());
-
 					exhibition.setMuseum(museumRepo.findOne("서울역사박물관"));
 
-					exhibitionRepo.save(exhibition);
+					exhibitionList.add(exhibition);
 				}
 			}
 		}
 		driver.quit();
+		return exhibitionList;
 	}
 }

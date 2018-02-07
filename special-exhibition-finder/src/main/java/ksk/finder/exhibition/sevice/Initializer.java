@@ -1,12 +1,10 @@
 package ksk.finder.exhibition.sevice;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +21,13 @@ import ksk.finder.exhibition.model.Museum;
 import ksk.finder.exhibition.repository.ExhibitionRepository;
 import ksk.finder.exhibition.repository.MuseumRepository;
 import ksk.finder.exhibition.sevice.scraper.MuseumScraper;
+import ksk.finder.exhibition.sevice.scraper.task.ExhibitionTask;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class Initializer {
-	public String updated = "";
+	public String updated;
 
 	@Autowired
 	private MuseumRepository museumRepo;
@@ -38,6 +37,9 @@ public class Initializer {
 
 	@Autowired
 	private List<MuseumScraper> museumScrapers;
+
+	@Autowired
+	private List<ExhibitionTask> exhibitionTasks;
 
 	// 추가기능 : scraper 추가하기 / 현재 크롤링 중인 박물관 목록 표기
 	// 어느정도 완성되면 서버 올리기
@@ -53,17 +55,14 @@ public class Initializer {
 
 		initMuseum();
 		initExhibition();
-		updateExhibitionClosingDate();
-		updateExhibitionRoom();
-		updateExhibitionLink();
 
 		this.updated = getCurrentTime();
 		log.info("최근 업데이트 : {}", updated);
 		log.info("########## initialization End ##########");
 	}
 
-	// 매주 수요일 06시 00분에 업데이트!
-	@Scheduled(cron = "0 0 6 * * WED")
+	// 매일 09시 00분에 업데이트!
+	@Scheduled(cron = "0 0 9 * * *")
 	public void updateStart() {
 		log.info("########## update Start ##########");
 
@@ -76,75 +75,10 @@ public class Initializer {
 
 		initMuseum();
 		initExhibition();
-		updateExhibitionRoom();
-		updateExhibitionLink();
 
 		this.updated = getCurrentTime();
 		log.info("최근 업데이트 : {}", updated);
 		log.info("########## update End ##########");
-	}
-
-	// 매일 00시 00분에 업데이트!
-	@Scheduled(cron = "0 0 0 * * *")
-	public void updateExhibitionClosingDate() {
-		List<Exhibition> exhibitionList = exhibitionRepo.findAll();
-
-		for (Exhibition ex : exhibitionList) {
-			ex.setClosingDate(calExhibitionClosingDate(ex.getPeriod().substring(11)));
-			exhibitionRepo.save(ex);
-		}
-	}
-
-	private long calExhibitionClosingDate(String period) {
-		try {
-			Calendar cal = Calendar.getInstance();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date currentDate = new Date(cal.getTimeInMillis());
-			Date periodDate = sdf.parse(period);
-
-			long difference = currentDate.getTime() - periodDate.getTime();
-			long closingDate = difference / (24 * 60 * 60 * 1000);
-			closingDate = Math.abs(closingDate) + 1;
-
-			return closingDate;
-		} catch (ParseException e) {
-			log.error("fail", e);
-		}
-		return 0;
-	}
-
-	// 전시실이 박물관 이름으로 시작하는 경우 변경하는 메서드
-	private void updateExhibitionRoom() {
-		List<Exhibition> exhibitionList = exhibitionRepo.findAll();
-
-		for (Exhibition ex : exhibitionList) {
-			ex.setRoom(calExhibitionRoom(ex.getMuseum().getName(), ex.getRoom()));
-			exhibitionRepo.save(ex);
-		}
-	}
-
-	private String calExhibitionRoom(String museumName, String room) {
-		if (room.startsWith(museumName)) {
-			return room.replaceAll(museumName, "").replaceAll(" ", "");
-		} else {
-			return room;
-		}
-	}
-
-	private void updateExhibitionLink() {
-		List<Exhibition> exhibitionList = exhibitionRepo.findAll();
-
-		for (Exhibition ex : exhibitionList) {
-			ex.setSpecificLink(calExhibitionLink(ex.getOriginalLink(), ex.getSpecificLink()));
-			exhibitionRepo.save(ex);
-		}
-	}
-
-	private String calExhibitionLink(String originalLink, String specificLink) {
-		if (specificLink == null) {
-			return originalLink;
-		}
-		return specificLink;
 	}
 
 	// 추후 수정 예정
@@ -175,12 +109,25 @@ public class Initializer {
 
 	@Transactional
 	private void initExhibition() {
-		try {
-			for (MuseumScraper ms : museumScrapers) {
-				ms.parseMuseum();
+		for (MuseumScraper ms : museumScrapers) {
+			List<Exhibition> exhibitionList = null;
+
+			try {
+				exhibitionList = ms.parseMuseum();
+			} catch (IOException e) {
+				log.error("fail", e);
 			}
-		} catch (IOException e) {
-			log.error("fail", e);
+
+			if (exhibitionList != null && !exhibitionList.isEmpty()) {
+				for (Exhibition ex : exhibitionList) {
+					Exhibition exhibition = new Exhibition();
+
+					for (ExhibitionTask task : exhibitionTasks) {
+						exhibition = task.doTask(ex);
+					}
+					exhibitionRepo.save(exhibition);
+				}
+			}
 		}
 
 		log.info("########## initExhibition End ##########");
@@ -191,10 +138,10 @@ public class Initializer {
 	}
 
 	private String getCurrentTime() {
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-		String updatedTime = sdf.format(cal.getTime());
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String formatDateTime = now.format(formatter);
 
-		return updatedTime;
+		return formatDateTime;
 	}
 }

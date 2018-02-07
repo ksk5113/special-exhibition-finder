@@ -100,21 +100,11 @@
 			<type>jar</type>
 			<version>15.0</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>xalan</groupId>
-			<artifactId>xalan</artifactId>
-			<version>2.7.2</version>
-		</dependency>
-		<dependency>
-			<groupId>xalan</groupId>
-			<artifactId>serializer</artifactId>
-			<version>2.7.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk15on</artifactId>
-			<version>1.48</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>xalan</groupId> <artifactId>xalan</artifactId> 
+			<version>2.7.2</version> </dependency> <dependency> <groupId>xalan</groupId> 
+			<artifactId>serializer</artifactId> <version>2.7.2</version> </dependency> 
+			<dependency> <groupId>org.bouncycastle</groupId> <artifactId>bcprov-jdk15on</artifactId> 
+			<version>1.48</version> </dependency> -->
 
 		<!-- 내장 inMemory database -->
 		<dependency>

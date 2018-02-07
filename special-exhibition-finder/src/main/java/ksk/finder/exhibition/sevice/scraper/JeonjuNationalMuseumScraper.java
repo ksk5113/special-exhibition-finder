@@ -1,6 +1,7 @@
 package ksk.finder.exhibition.sevice.scraper;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,7 +25,7 @@ public class JeonjuNationalMuseumScraper implements MuseumScraper {
 	private ExhibitionRepository exhibitionRepo;
 
 	@Override
-	public void parseMuseum() throws IOException {
+	public List<Exhibition> parseMuseum() throws IOException {
 		String originalLink = "http://jeonju.museum.go.kr/special.es?mid=a10201010100";
 		Document originalDoc = Jsoup.connect(originalLink).get();
 
@@ -59,8 +60,9 @@ public class JeonjuNationalMuseumScraper implements MuseumScraper {
 				exhibition.setDescription(specificDoc.select("div.paragraph40").text().trim());
 				exhibition.setMuseum(museumRepo.findOne("국립전주박물관"));
 
-				exhibitionRepo.save(exhibition);
+				exhibitionList.add(exhibition);
 			}
 		}
+		return exhibitionList;
 	}
 }

@@ -1,6 +1,7 @@
 package ksk.finder.exhibition.sevice.scraper;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,7 +25,7 @@ public class SilhakMuseumScraper implements MuseumScraper {
 	private ExhibitionRepository exhibitionRepo;
 
 	@Override
-	public void parseMuseum() throws IOException {
+	public List<Exhibition> parseMuseum() throws IOException {
 		// 진행 중인 전시만 표시해줌!
 		String originalLink = "http://silhak.ggcf.kr/archives/calendar/exhibit-all/exhibit-special?ptype=exhibit&ongoing=1";
 		Document originalDoc = Jsoup.connect(originalLink).get();
@@ -53,12 +54,11 @@ public class SilhakMuseumScraper implements MuseumScraper {
 				exhibition.setPeriod(exhibitionPeriod.substring(0, 10) + exhibitionPeriod.substring(13, 24));
 
 				exhibition.setDescription(divElements.get(3).text().trim());
-
 				exhibition.setMuseum(museumRepo.findOne("실학박물관"));
 
-				exhibitionRepo.save(exhibition);
+				exhibitionList.add(exhibition);
 			}
 		}
-
+		return exhibitionList;
 	}
 }
