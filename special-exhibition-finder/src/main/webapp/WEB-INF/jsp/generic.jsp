@@ -32,7 +32,7 @@
 						<section>
 							<div class="inner">
 								<header>
-									<h1>${exhibition.name}</h1>
+									<h1>[${exhibition.museum.name}] ${exhibition.name}</h1>
 								</header>
 								<section class="columns double">
 									<div class="column">
@@ -42,7 +42,7 @@
 											<p>
 												<h4>일정</h4> ${exhibition.period}
 												<br/><br/>
-												<h4>장소</h4> ${exhibition.museum.name} ${exhibition.room}
+												<h4>장소</h4> ${exhibition.room}
 												<br/><br/>
 												<h4>홈페이지</h4>
 													<c:if test="${exhibition.specificLink eq null}">

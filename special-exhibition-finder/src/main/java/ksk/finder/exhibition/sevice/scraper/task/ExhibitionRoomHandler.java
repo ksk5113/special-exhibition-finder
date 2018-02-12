@@ -16,7 +16,7 @@ public class ExhibitionRoomHandler implements ExhibitionTask {
 
 	private String calExhibitionRoom(String museumName, String room) {
 		if (room.startsWith(museumName)) {
-			return room.replaceAll(museumName, "").replaceAll(" ", "");
+			return room.replaceAll(museumName, "").trim();
 		} else {
 			return room;
 		}
