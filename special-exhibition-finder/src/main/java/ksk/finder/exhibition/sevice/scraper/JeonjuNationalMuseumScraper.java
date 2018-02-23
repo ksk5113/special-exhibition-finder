@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ksk.finder.exhibition.model.Exhibition;
-import ksk.finder.exhibition.repository.ExhibitionRepository;
 import ksk.finder.exhibition.repository.MuseumRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,16 +20,13 @@ public class JeonjuNationalMuseumScraper implements MuseumScraper {
 	@Autowired
 	private MuseumRepository museumRepo;
 
-	@Autowired
-	private ExhibitionRepository exhibitionRepo;
-
 	@Override
 	public List<Exhibition> parseMuseum() throws IOException {
 		String originalLink = "http://jeonju.museum.go.kr/special.es?mid=a10201010100";
 		Document originalDoc = Jsoup.connect(originalLink).get();
 
 		// 진행 중인 전시가 없을 경우, 수정 필요! (임시 isOngoing)
-		boolean isOngoing = originalDoc.select("div.img-list01 ul").first().hasClass("list");
+		boolean isOngoing = originalDoc.select("div.img-list01").first().children().get(0).hasClass("list");
 
 		// 진행 중인 전시가 있음!
 		if (isOngoing) {

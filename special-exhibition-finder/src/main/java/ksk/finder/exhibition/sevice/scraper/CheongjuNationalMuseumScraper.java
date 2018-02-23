@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ksk.finder.exhibition.model.Exhibition;
-import ksk.finder.exhibition.repository.ExhibitionRepository;
 import ksk.finder.exhibition.repository.MuseumRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,9 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 public class CheongjuNationalMuseumScraper implements MuseumScraper {
 	@Autowired
 	private MuseumRepository museumRepo;
-
-	@Autowired
-	private ExhibitionRepository exhibitionRepo;
 
 	@Override
 	public List<Exhibition> parseMuseum() throws IOException {

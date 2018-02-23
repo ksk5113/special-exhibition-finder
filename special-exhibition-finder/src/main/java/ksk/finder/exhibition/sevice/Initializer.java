@@ -61,8 +61,8 @@ public class Initializer {
 		log.info("########## initialization End ##########");
 	}
 
-	// 매일 09시 00분에 업데이트!
-	@Scheduled(cron = "0 0 9 * * *")
+	// 매일 10시 00분에 업데이트!
+	@Scheduled(cron = "0 0 10 * * *")
 	public void updateStart() {
 		log.info("########## update Start ##########");
 
@@ -85,8 +85,8 @@ public class Initializer {
 	@Transactional
 	private void initMuseum() {
 		Map<String, List<String>> museumMap = new HashMap<>();
-		museumMap.put("seoul",
-				new ArrayList<String>(Arrays.asList("국립중앙박물관", "국립고궁박물관", "서울역사박물관", "국립민속박물관", "불교중앙박물관", "DDP")));
+		museumMap.put("seoul", new ArrayList<String>(
+				Arrays.asList("국립중앙박물관", "국립고궁박물관", "서울역사박물관", "국립민속박물관", "국립한글박물관", "불교중앙박물관", "DDP")));
 		museumMap.put("gyeonggi", new ArrayList<String>(Arrays.asList("실학박물관")));
 		museumMap.put("gangwon", new ArrayList<String>(Arrays.asList("국립춘천박물관")));
 		museumMap.put("chungcheong", new ArrayList<String>(Arrays.asList("국립공주박물관", "국립청주박물관", "국립부여박물관")));
