@@ -48,7 +48,7 @@ public class NationalHangeulMuseumScraper implements MuseumScraper {
 
 				// 여기서 전시 상세페이지의 정보 파싱
 				exhibition.setImage(driver.findElement(By.cssSelector("span.poster_img img")).getAttribute("src"));
-				exhibition.setName(driver.findElement(By.tagName("h6")).getText());
+				exhibition.setName(driver.findElement(By.cssSelector("ul.description li h6")).getText());
 				exhibition.setPeriod(driver.findElements(By.cssSelector("div.head dl")).get(0)
 						.findElement(By.cssSelector("dd")).getText());
 				exhibition.setRoom(driver.findElements(By.cssSelector("div.head dl")).get(1)
