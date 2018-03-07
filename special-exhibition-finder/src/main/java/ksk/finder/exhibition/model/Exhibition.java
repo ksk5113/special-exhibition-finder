@@ -42,9 +42,14 @@ public class Exhibition implements Comparable<Exhibition> {
 		return 0;
 	}
 
-	public long getCalculatedRemainingDays() {
+	public String getCalculatedRemainingDays() {
 		LocalDate today = LocalDate.now();
+		long remainingDays = ChronoUnit.DAYS.between(today, this.endDate);
 
-		return ChronoUnit.DAYS.between(today, this.endDate);
+		if (remainingDays < 1) {
+			return "오늘";
+		} else {
+			return remainingDays + "일 후";
+		}
 	}
 }

@@ -62,7 +62,7 @@
 													<div class="image_museum">
 														${ex.museum.name}
 														</br>
-														${ex.getCalculatedRemainingDays()}일 후 종료
+														${ex.getCalculatedRemainingDays()} 종료
 													</div>
 												</a>
 											</div>

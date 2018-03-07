@@ -28,21 +28,25 @@ public class NationalPalaceMuseumScraper implements MuseumScraper {
 		exhibition.setOriginalLink(originalLink);
 
 		Document originalDoc = Jsoup.connect(originalLink).get();
-		Element divElements = originalDoc.select("p.sec_tit").first();
+		boolean isOngoing = originalDoc.select("div.special_view p").first().hasClass("sec_tit");
 
-		// 현재전시가 하나 -> 추후 수정 필요!
-		Elements siblings = divElements.siblingElements();
+		if (isOngoing) {
+			Element divElements = originalDoc.select("p.sec_tit").first();
 
-		// 여기서 specificLink(전시 상세페이지)의 정보 파싱
-		exhibition.setSpecificLink(originalLink);
-		exhibition.setName(divElements.text());
-		exhibition.setPeriod(siblings.get(1).text().substring(7).replaceAll(" ", ""));
-		exhibition.setRoom(siblings.get(2).text().substring(7));
-		exhibition.setImage(siblings.get(5).child(0).attr("src"));
-		exhibition.setDescription(siblings.get(6).text());
-		exhibition.setMuseum(museumRepo.findOne("국립고궁박물관"));
+			// 현재전시가 하나 -> 추후 수정 필요!
+			Elements siblings = divElements.siblingElements();
 
-		exhibitionList.add(exhibition);
+			// 여기서 specificLink(전시 상세페이지)의 정보 파싱
+			exhibition.setSpecificLink(originalLink);
+			exhibition.setName(divElements.text());
+			exhibition.setPeriod(siblings.get(1).text().substring(7).replaceAll(" ", ""));
+			exhibition.setRoom(siblings.get(2).text().substring(7));
+			exhibition.setImage(siblings.get(5).child(0).attr("src"));
+			exhibition.setDescription(siblings.get(6).text());
+			exhibition.setMuseum(museumRepo.findOne("국립고궁박물관"));
+
+			exhibitionList.add(exhibition);
+		}
 		return exhibitionList;
 	}
 }

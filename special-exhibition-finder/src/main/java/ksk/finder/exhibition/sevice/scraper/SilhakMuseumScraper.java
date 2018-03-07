@@ -26,33 +26,38 @@ public class SilhakMuseumScraper implements MuseumScraper {
 		String originalLink = "http://silhak.ggcf.kr/archives/calendar/exhibit-all/exhibit-special?ptype=exhibit&ongoing=1";
 		Document originalDoc = Jsoup.connect(originalLink).get();
 
-		Elements liElements = originalDoc.select("ul.exhibition-list-wrap").first().children();
+		boolean isOngoing = originalDoc.select("div.archive-content").first().child(1).hasClass("exhibition-list-wrap");
 
-		for (Element li : liElements) {
-			boolean isHistorical = li.select("div.info strong").text().contains("특별");
+		if (isOngoing) {
+			Elements liElements = originalDoc.select("ul.exhibition-list-wrap").first().children();
 
-			if (isHistorical) {
-				Exhibition exhibition = new Exhibition();
-				exhibition.setOriginalLink(originalLink);
+			for (Element li : liElements) {
+				boolean isHistorical = li.select("div.info strong").text().contains("특별");
 
-				String specificLink = li.select("div.thumbnail a").attr("href");
-				exhibition.setSpecificLink(specificLink);
+				if (isHistorical) {
+					Exhibition exhibition = new Exhibition();
+					exhibition.setOriginalLink(originalLink);
 
-				// 여기서 specificLink(전시 상세페이지)의 정보 파싱
-				Document specificDoc = Jsoup.connect(specificLink).get();
-				Elements divElements = specificDoc.select("div.common-data div.con");
+					String specificLink = li.select("div.thumbnail a").attr("href");
+					exhibition.setSpecificLink(specificLink);
 
-				exhibition.setRoom(li.select("div.info ul li").first().text().substring(4).trim());
-				exhibition.setImage(li.select("div.thumbnail a img").attr("src"));
-				exhibition.setName(divElements.get(0).text().trim());
+					// 여기서 specificLink(전시 상세페이지)의 정보 파싱
+					Document specificDoc = Jsoup.connect(specificLink).get();
+					Elements divElements = specificDoc.select("div.common-data div.con");
 
-				String exhibitionPeriod = divElements.get(1).text().replaceAll(" ", "").replaceAll("\\.", "-").trim();
-				exhibition.setPeriod(exhibitionPeriod.substring(0, 10) + exhibitionPeriod.substring(13, 24));
+					exhibition.setRoom(li.select("div.info ul li").first().text().substring(4).trim());
+					exhibition.setImage(li.select("div.thumbnail a img").attr("src"));
+					exhibition.setName(divElements.get(0).text().trim());
 
-				exhibition.setDescription(divElements.get(3).text().trim());
-				exhibition.setMuseum(museumRepo.findOne("실학박물관"));
+					String exhibitionPeriod = divElements.get(1).text().replaceAll(" ", "").replaceAll("\\.", "-")
+							.trim();
+					exhibition.setPeriod(exhibitionPeriod.substring(0, 10) + exhibitionPeriod.substring(13, 24));
 
-				exhibitionList.add(exhibition);
+					exhibition.setDescription(divElements.get(3).text().trim());
+					exhibition.setMuseum(museumRepo.findOne("실학박물관"));
+
+					exhibitionList.add(exhibition);
+				}
 			}
 		}
 		return exhibitionList;
