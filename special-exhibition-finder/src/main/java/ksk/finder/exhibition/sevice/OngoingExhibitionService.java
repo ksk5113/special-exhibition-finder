@@ -19,12 +19,14 @@ public class OngoingExhibitionService {
 		return exhibitionRepo.findAll();
 	}
 
-	public List<Exhibition> get8Exhibitions() {
+	public List<Exhibition> getSomeExhibitions() {
 		List<Exhibition> allExhibitions = exhibitionRepo.findAll();
 		List<Exhibition> exhibitionList = new ArrayList<>();
 
-		for (int i = 0; i < 8; i++) {
-			exhibitionList.add(allExhibitions.get(i));
+		if (!allExhibitions.isEmpty()) {
+			for (int i = 0; i < allExhibitions.size() / 2; i++) {
+				exhibitionList.add(allExhibitions.get(i));
+			}
 		}
 
 		return exhibitionList;

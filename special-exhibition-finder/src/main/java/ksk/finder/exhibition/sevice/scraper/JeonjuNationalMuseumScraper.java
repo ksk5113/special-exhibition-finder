@@ -26,6 +26,7 @@ public class JeonjuNationalMuseumScraper implements MuseumScraper {
 		Document originalDoc = Jsoup.connect(originalLink).get();
 
 		// 진행 중인 전시가 없을 경우, 수정 필요! (임시 isOngoing)
+		// 진행과 예정 분리 필요!
 		boolean isOngoing = originalDoc.select("div.img-list01").first().children().get(0).hasClass("list");
 
 		// 진행 중인 전시가 있음!

@@ -1,7 +1,5 @@
 package ksk.finder.exhibition.controller;
 
-import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +21,7 @@ public class MainController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String indexDispatcher(Model model) {
 		model.addAttribute("updated", initializer.getUpdated());
-		model.addAttribute("exhibitionList", service.get8Exhibitions());
+		model.addAttribute("exhibitionList", service.getSomeExhibitions());
 
 		return "index";
 	}
@@ -31,7 +29,7 @@ public class MainController {
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String indexController(Model model) {
 		model.addAttribute("updated", initializer.getUpdated());
-		model.addAttribute("exhibitionList", service.get8Exhibitions());
+		model.addAttribute("exhibitionList", service.getSomeExhibitions());
 
 		return "index";
 	}
@@ -51,5 +49,13 @@ public class MainController {
 		}
 
 		return "generic";
+	}
+	
+	@RequestMapping(value = "/info", method = RequestMethod.GET)
+	public String infoController(Model model) {
+		model.addAttribute("updated", initializer.getUpdated());
+		model.addAttribute("exhibitionList", service.getSomeExhibitions());
+
+		return "index";
 	}
 }

@@ -26,13 +26,14 @@ public class NationalHangeulMuseumScraper implements MuseumScraper {
 		System.setProperty("webdriver.chrome.driver", "C:\\Users\\KIM\\Desktop\\chromedriver.exe");
 		WebDriver driver = new ChromeDriver();
 		driver.get("http://www.hangeul.go.kr/specialExh/specialExhList.do?target=1&curr_menu_cd=0103020100");
-		boolean isOngoing = driver.findElements(By.cssSelector("div.section02 div")).get(0).getAttribute("class")
-				.equals("photo_lst02");
+
+		int exhibitionNum = Integer
+				.parseInt(driver.findElement(By.cssSelector("div.infoArea p.sechInfo span")).getText());
+		// boolean isOngoing = driver.findElements(By.cssSelector("div.section02
+		// div")).get(0).getAttribute("class").equals("photo_lst02");
 
 		// 진행 중인 전시가 있음!
-		if (isOngoing) {
-			int exhibitionNum = driver.findElements(By.cssSelector("div.section02 div.photo_lst02")).size();
-
+		if (exhibitionNum > 0) {
 			for (int i = 0; i < exhibitionNum; i++) {
 				driver.get("http://www.hangeul.go.kr/specialExh/specialExhList.do?target=1&curr_menu_cd=0103020100");
 				WebElement divElement = driver.findElements(By.cssSelector("div.section02 div.photo_lst02")).get(i);
@@ -55,7 +56,7 @@ public class NationalHangeulMuseumScraper implements MuseumScraper {
 						.findElement(By.cssSelector("dd")).getText());
 				exhibition.setDescription(driver.findElement(By.cssSelector("div.exhibition_composition")).getText());
 				exhibition.setMuseum(museumRepo.findOne("국립한글박물관"));
-				
+
 				exhibitionList.add(exhibition);
 			}
 		}

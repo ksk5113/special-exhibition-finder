@@ -23,7 +23,7 @@ public class CheongjuNationalMuseumScraper implements MuseumScraper {
 	@Override
 	public List<Exhibition> parseMuseum() throws IOException {
 		String originalLink = "https://cheongju.museum.go.kr/www/selectSpeclExbiList.do?key=453";
-		Document originalDoc = Jsoup.connect(originalLink).get();
+		Document originalDoc = Jsoup.connect(originalLink).timeout(60000).validateTLSCertificates(false).get();
 		int exhibitionNum = Integer.parseInt(originalDoc.select("span.posts").text().substring(6, 7));
 
 		// 진행 중인 전시가 있음!
@@ -41,7 +41,8 @@ public class CheongjuNationalMuseumScraper implements MuseumScraper {
 					exhibition.setSpecificLink(specificLink);
 
 					// 여기서 specificLink(전시 상세페이지)의 정보 파싱
-					Document specificDoc = Jsoup.connect(specificLink).get();
+					Document specificDoc = Jsoup.connect(specificLink).timeout(60000).validateTLSCertificates(false)
+							.get();
 					liElements = specificDoc.select("div.photo_article ul").first().children();
 
 					exhibition.setName(liElements.get(0).text().substring(3));

@@ -1,4 +1,4 @@
-package ksk.finder.exhibition.sevice.scraper;
+/*package ksk.finder.exhibition.sevice.scraper;
 
 import java.io.IOException;
 import java.util.List;
@@ -63,3 +63,4 @@ public class SilhakMuseumScraper implements MuseumScraper {
 		return exhibitionList;
 	}
 }
+*/
