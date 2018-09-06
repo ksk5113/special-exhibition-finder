@@ -26,7 +26,8 @@ public class ChuncheonNationalMuseumScraper implements MuseumScraper {
 		String originalLink = "http://chuncheon.museum.go.kr/html/kr/display/display_02_02.html?tmpl=kr&linkid=020202&dis_gubun=01";
 		Document originalDoc = Jsoup.connect(originalLink).get();
 
-		boolean isOngoing = originalDoc.select("ul.display_showList li").first().children().hasClass("list");
+		boolean isOngoing = !originalDoc.select("ul.display_showList li").first().select("ul.list li").first().text()
+				.contains("준비중입니다.");
 
 		// 진행 중인 전시가 있음!
 		if (isOngoing) {

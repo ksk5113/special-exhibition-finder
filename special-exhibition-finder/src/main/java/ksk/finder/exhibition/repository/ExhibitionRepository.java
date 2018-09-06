@@ -7,5 +7,4 @@ import ksk.finder.exhibition.model.Exhibition;
 public interface ExhibitionRepository extends JpaRepository<Exhibition, String> {
 
 	Exhibition findByName(String exhibitionName);
-
 }

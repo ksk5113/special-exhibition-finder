@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,20 +40,21 @@ public class Initializer {
 	@Autowired
 	private List<ExhibitionTask> exhibitionTasks;
 
-	// 추가기능 : scraper 추가하기 / 현재 크롤링 중인 박물관 목록 표기
+	// 추가기능 : 서비스 소개 페이지(현재 크롤링 중인 박물관 목록 표기) / scraper 추가하기
 	// 어느정도 완성되면 서버 올리기
 	// 심심하면 : 배너 랜덤 이미지 출력
+	// 아이콘 색 : RGB(134,137,139)
 
-	@PostConstruct
+//	@PostConstruct
 	public void initStart() {
 		log.info("########## initialization Start ##########");
-		if (museumRepo.count() != 0) {
-			log.info("Museums are already initiatied");
-			return;
-		}
+		/*
+		 * if (museumRepo.count() != 0) {
+		 * log.info("Museums are already initiatied"); return; }
+		 */
 
 		initMuseum();
-		initExhibition();
+		// initExhibition();
 
 		this.updated = getCurrentTime();
 		log.info("최근 업데이트 : {}", updated);
@@ -62,7 +62,7 @@ public class Initializer {
 	}
 
 	// 매일 10시 00분에 업데이트!
-	@Scheduled(cron = "0 0 10 * * *")
+	// @Scheduled(cron = "0 0 10 * * *")
 	public void updateStart() {
 		log.info("########## update Start ##########");
 
@@ -84,14 +84,17 @@ public class Initializer {
 	// 추후 수정 예정
 	@Transactional
 	private void initMuseum() {
+		museumRepo.deleteAll();
+		// 통도사 성보박물관(괘불탱+기획), 
+
 		Map<String, List<String>> museumMap = new HashMap<>();
 		museumMap.put("seoul", new ArrayList<String>(
 				Arrays.asList("국립중앙박물관", "국립고궁박물관", "서울역사박물관", "국립민속박물관", "국립한글박물관", "불교중앙박물관", "DDP")));
 		museumMap.put("gyeonggi", new ArrayList<String>(Arrays.asList("실학박물관")));
 		museumMap.put("gangwon", new ArrayList<String>(Arrays.asList("국립춘천박물관")));
 		museumMap.put("chungcheong", new ArrayList<String>(Arrays.asList("국립공주박물관", "국립청주박물관", "국립부여박물관")));
-		museumMap.put("yeongnam", new ArrayList<String>(Arrays.asList("국립김해박물관", "국립대구박물관", "국립진주박물관")));
-		museumMap.put("honam", new ArrayList<String>(Arrays.asList("국립광주박물관", "국립전주박물관")));
+		museumMap.put("yeongnam", new ArrayList<String>(Arrays.asList("국립경주박물관", "국립김해박물관", "국립대구박물관", "국립진주박물관")));
+		museumMap.put("honam", new ArrayList<String>(Arrays.asList("국립광주박물관", "국립전주박물관", "국립나주박물관")));
 		museumMap.put("jeju", new ArrayList<String>(Arrays.asList("국립제주박물관")));
 
 		for (String key : museumMap.keySet()) {
@@ -109,6 +112,8 @@ public class Initializer {
 
 	@Transactional
 	private void initExhibition() {
+		exhibitionRepo.deleteAll();
+
 		for (MuseumScraper ms : museumScrapers) {
 			List<Exhibition> exhibitionList = null;
 

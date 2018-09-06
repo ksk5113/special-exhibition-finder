@@ -22,6 +22,7 @@
 					<ul>
 						<li><a href="/index"><span class="icon fa-home"></span></a></li>
 						<li><a href="/gallery" class="active"><span class="icon fa-camera-retro"></span></a></li>
+						<li><a href="/info"><span class="icon fa-info-circle"></span></a></li>
 					</ul>
 				</nav>
 

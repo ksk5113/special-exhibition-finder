@@ -24,33 +24,37 @@ public class NationalFolkMuseumScraper implements MuseumScraper {
 	public List<Exhibition> parseMuseum() throws IOException {
 		String originalLink = "http://www.nfm.go.kr/user/planexhibition/home/63/selectPlanExhibitionNList.do";
 		Document originalDoc = Jsoup.connect(originalLink).get();
+		
+		boolean isOngoing = !originalDoc.select("ul.d-exhibition__list").first().text().contains("데이터가 없습니다.");
 
-		Elements liElements = originalDoc.select("ul.d-exhibition__list").first().children();
+		// 진행 중인 전시가 있음!
+		if (isOngoing) {
+			Elements liElements = originalDoc.select("ul.d-exhibition__list").first().children();
+			
+			for (Element li : liElements) {
+				if (li.select("div.c-labels span").first().text().equals("현재전시")) {
+					Exhibition exhibition = new Exhibition();
+					exhibition.setOriginalLink(originalLink);
 
-		// 진행 중인 전시가 없을 경우, 수정 필요!
-		for (Element li : liElements) {
-			if (li.select("div.c-labels span").first().text().equals("현재전시")) {
-				Exhibition exhibition = new Exhibition();
-				exhibition.setOriginalLink(originalLink);
+					String specificLink = "http://www.nfm.go.kr" + li.select("a.d-exhibition__link").attr("href");
+					exhibition.setSpecificLink(specificLink);
 
-				String specificLink = "http://www.nfm.go.kr" + li.select("a.d-exhibition__link").attr("href");
-				exhibition.setSpecificLink(specificLink);
+					// 여기서 specificLink(전시 상세페이지)의 정보 파싱
+					Document specificDoc = Jsoup.connect(specificLink).get();
 
-				// 여기서 specificLink(전시 상세페이지)의 정보 파싱
-				Document specificDoc = Jsoup.connect(specificLink).get();
+					exhibition.setImage(
+							"http://www.nfm.go.kr" + specificDoc.select("div.d-exhibition__poster img").attr("src"));
+					exhibition.setName(specificDoc.select("div.d-exhibition__title").text().trim());
 
-				exhibition.setImage(
-						"http://www.nfm.go.kr" + specificDoc.select("div.d-exhibition__poster img").attr("src"));
-				exhibition.setName(specificDoc.select("div.d-exhibition__title").text().trim());
+					Elements divElements = specificDoc.select("div.d-exhibition__datas").first().children();
+					exhibition.setRoom(divElements.get(0).select("div.d-exhibition__value").text().trim());
+					exhibition.setPeriod(divElements.get(1).select("div.d-exhibition__value").text().trim());
 
-				Elements divElements = specificDoc.select("div.d-exhibition__datas").first().children();
-				exhibition.setRoom(divElements.get(0).select("div.d-exhibition__value").text().trim());
-				exhibition.setPeriod(divElements.get(1).select("div.d-exhibition__value").text().trim());
+					exhibition.setDescription(specificDoc.select("div.d-exhibition__article blockquote p").text());
+					exhibition.setMuseum(museumRepo.findOne("국립민속박물관"));
 
-				exhibition.setDescription(specificDoc.select("div.d-exhibition__article blockquote p").text());
-				exhibition.setMuseum(museumRepo.findOne("국립민속박물관"));
-
-				exhibitionList.add(exhibition);
+					exhibitionList.add(exhibition);
+				}
 			}
 		}
 		return exhibitionList;

@@ -7,6 +7,7 @@
 	templated.co @templatedco
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 -->
+<!-- 서비스 소개 페이지(현재 크롤링 중인 박물관 목록 표기) -->
 <html>
 	<head>
 		<title>Special Exhibition Finder</title>
@@ -20,59 +21,48 @@
 			<!-- Nav -->
 				<nav id="nav">
 					<ul>
-						<li><a href="/index" class="active"><span class="icon fa-home"></span></a></li>
+						<li><a href="/index"><span class="icon fa-home"></span></a></li>
 						<li><a href="/gallery"><span class="icon fa-camera-retro"></span></a></li>
 						<li><a href="/info"><span class="icon fa-info-circle"></span></a></li>
 					</ul>
 				</nav>
 
 			<!-- Main -->
-				<section id="main">				
+				<section id="main">
 
-					<!-- Banner -->
-						<section id="banner">
+					<!-- Section -->
+						<section>
 							<div class="inner">
-								<h1>SPECIAL EXHIBITION FINDER</h1>
-								<p>진행 중인 박물관 특별 전시를 찾아드립니다.</p>
-								<ul class="actions">
-									<li><a href="#galleries" class="button alt scrolly big">알아보기</a></li>
-								</ul>
+								<header>
+									<h1>[${exhibition.museum.name}] ${exhibition.name}</h1>
+								</header>
+								<section class="columns double">
+									<div class="column">
+										<span class="image left special"><img src="${exhibition.image}" alt="${exhibition.name}" /></span>
+										<div class="exhibition_info">
+											<h2>전시정보</h2>
+											<p>
+												<h4>일정</h4> ${exhibition.period}
+												<br/><br/>
+												<h4>장소</h4> ${exhibition.room}
+												<br/><br/>
+												<h4>홈페이지</h4>
+													<c:if test="${exhibition.specificLink eq null}">
+														<a href="${exhibition.originalLink}" target="_blank">${exhibition.originalLink}</a>
+											        </c:if>
+											        <c:if test="${exhibition.specificLink ne null}">
+														<a href="${exhibition.specificLink}" target="_blank">${exhibition.specificLink}</a>
+											        </c:if>
+											</p>
+										</div>
+									</div>
+								</section>
+								
+								<br/><br/><br/>
+								<h2>세부내용</h2>
+								<p>${exhibition.description}</p>
+								
 							</div>
-						</section>
-
-					<!-- Gallery -->
-						<section id="galleries">
-
-							<!-- Photo Galleries -->
-								<div class="gallery">
-									<div class="index_header">
-										최근 업데이트 :
-										<span>${updated}</span>
-									</div>
-									<header class="special">
-										<h2>진행 중인 전시</h2>
-									</header>
-									<div class="content">
-										<c:forEach items="${exhibitionList}" var="ex">
-											<div class="media">
-												<a href="/gallery">
-													<img src="${ex.image}" alt="" title="${ex.name}" />
-													<div class="image_name">
-														<b>${ex.name}</b>
-													</div>
-													<div class="image_museum">
-														${ex.museum.name}
-														</br>
-														${ex.getCalculatedRemainingDays()} 종료
-													</div>
-												</a>
-											</div>
-          								</c:forEach>
-									</div>
-									<footer>
-										<a href="/gallery" class="button big">전체 보기</a>
-									</footer>
-								</div>
 						</section>
 
 					<!-- Footer -->
